@@ -7,6 +7,7 @@ Ashley Zhu, Kellen Yu
 # Intentions:
 
 A parallel iterative FDM solver to the heat equation.
+
 ![Alt text](https://raw.githubusercontent.com/Stuycs-K/project03-final-10-zhua-yuk/refs/heads/main/images/heatequation.png)
     
 # Intended usage:
