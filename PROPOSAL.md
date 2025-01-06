@@ -57,7 +57,7 @@ To find out when all calculations are completed and we are able to move onto the
 If possible, we plan to create a python visualizer that uses matplotlib or similar graphics libraries to visually represent the data. We also hope to create a tool that makes the process of setting up initial conditions easier, possibly letting 3D models to be taken in, or simpler geometries. 
 
 # Intended pacing:
-- [ ] 1/6 : Initial Proposal
+- [x] 1/6 : Initial Proposal
 - [ ] 1/8: FDM Calculation functions and File I/O functions complete
 - [ ] 1/11: Shared memory management and Sub-process management complete
 - [ ] 1/12: Testing examples completed
