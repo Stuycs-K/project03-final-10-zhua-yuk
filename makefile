@@ -8,7 +8,7 @@ subprocess.o: subprocess.c subprocess.h memory.h fdmcalc.h config.h
 	@gcc -c subprocess.c
 memory.o: memory.c memory.h config.h
 	@gcc -c memory.c
-fdmcalc.o: fdmcalc.c fdmcalc.h config.h
+fdmcalc.o: fdmcalc.c fdmcalc.h
 	@gcc -c fdmcalc.c
 clean: 
 	@rm -f *.o
