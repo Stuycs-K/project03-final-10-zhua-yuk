@@ -47,6 +47,11 @@ vec3i read_fdata(char* path) {
 	units = atof(constants[7]);
 	num_materials = atoi(constants[8]);
 
+	//allocate shared memory
+
+
+
+	//write to shared memory array
 
 
 
@@ -64,5 +69,6 @@ int semaphore_setup(int num_subprocesses) {
 }
 
 int shared_mem_setup(vec3i size) {
+
 	return 1;
 }
