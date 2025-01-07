@@ -1,9 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "memory.h"
 
-struct point3i read_fdata(char* path, int mode) {
-	struct point3i out;
+vec3i read_fdata(char* path) {
+	vec3i out;
 	return out;
 }
 
@@ -15,6 +13,6 @@ int semaphore_setup(int num_subprocesses) {
 	return 1;
 }
 
-int shared_mem_setup(struct point3i size) {
+int shared_mem_setup(struct vec3i size) {
 	return 1;
 }

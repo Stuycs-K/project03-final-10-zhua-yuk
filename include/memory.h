@@ -1,6 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 #include "types.h"
+
 /*
 read_fdata
     reads in initial conditions .csv file and allocates shared memory
