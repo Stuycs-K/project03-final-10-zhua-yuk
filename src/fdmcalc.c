@@ -32,3 +32,10 @@ double * update_row(double * original, double * plusy, double * minusy, double *
     }
     return newrow;
 }
+
+double ** update_layer(double ** layer, double ** above, double ** below, int i_max, int j_max, double timestep, double units, double ** coeffs){
+    double ** newlayer = malloc(sizeof(double)*j_max);
+    for(int row = 0; row < j_max; row++){
+        
+    }
+}
