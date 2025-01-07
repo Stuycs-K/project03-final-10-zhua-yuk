@@ -21,4 +21,5 @@ double * update_row(double * original, double * above, double * below, double * 
         }
         *newrow[i]=update_cell(*original[i],cl, cr, *above[i], *below[i], *coeffs[i], timestep, units);
     }
+    return newrow;
 }
