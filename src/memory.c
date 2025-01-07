@@ -14,6 +14,6 @@ int semaphore_setup(int num_subprocesses) {
 	return 1;
 }
 
-int shared_mem_setup(struct vec3i size) {
+int shared_mem_setup(vec3i size) {
 	return 1;
 }

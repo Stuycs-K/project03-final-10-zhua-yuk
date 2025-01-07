@@ -12,6 +12,7 @@ double update_cell(double cc, double* cn, double timestep, double coeff, double 
 }
 
 double * update_row(double * original, double * above, double * below, double * coeffs, int i_max, double timestep, double units){
+    /*
     double * newrow = malloc(sizeof(double)*i_max);
     for(int i = 0; i<i_max; i++){
         double cl = 0;
@@ -25,4 +26,5 @@ double * update_row(double * original, double * above, double * below, double * 
         *newrow[i]=update_cell(*original[i],cl, cr, *above[i], *below[i], *coeffs[i], timestep, units);
     }
     return newrow;
+    */
 }
