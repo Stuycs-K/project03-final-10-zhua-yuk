@@ -21,9 +21,20 @@ RETURN VALUE
 double update_cell(double cc, double* cn, double timestep, double coeff, double units);
 
 /*
-args: double * original is an array of the temperatures of a given row, double * above is an array of the temperatures of the row above the given row, double * below is an array of the temperatures of the row below a given row, double * coeffs is an array of the thermal diffusivity coefficients that correspond to each cell of the row, int i_max is the number of cells in that row, double timestep is the amount of time that passed during this change, double units is the unit per cell 
-note: if there is no row above/bellow the given row, double * above or double * below will be an array full of 0s
-return: double array of row with updated temperatures
+ARGS
+    double * original - row of array temperatures
+    double * plusy - row of temperatures above in same layer (+1 y)
+    double * minusy - row of temperatures below in same layer (-1 y)
+    double * plusz - row of temperatures in row of layer above (+1 z)
+    double * minusz - row of temperatures in row of layer below (-1 z)
+    double * coeffs - array of thermal coefficients for the row
+    int i_max - number of cells in row
+    double timestep - timestep
+    double units - unit per cell length
+Note: if there is no row above/bellow the given row, double * above or double * below will be an array full of 0s
+
+RETURN VALUE 
+    double array of row with updated temperatures
 */
-double * update_row(double * original, double * above, double * below, double * coeffs, int i_max, double timestep, double units);
+double * update_row(double * original, double * plusy, double * minusy, double * plusz, double * minusz, double * coeffs, int i_max, double timestep, double units);
 #endif
