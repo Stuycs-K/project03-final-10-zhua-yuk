@@ -1,0 +1,64 @@
+#ifndef MEMORY_H
+#define MEMORY_H
+#include "types.h"
+
+/*
+read_fdata
+    reads in initial conditions .csv file and allocates shared memory
+    and writes to it. Always writes to array A in shared memory
+
+ARGS
+    char* path - the path to the .csv file
+
+RETURN VALUE
+    vec3i struct containing dimensions of the grid
+    values are all -1 if an error occured
+*/
+vec3i read_fdata(char* path);
+
+/*
+write_data
+    writes data from an array in shared memory to an output
+    .csv file. If the file doesn't exist, it creates it, then appends.
+
+ARGS
+    char* path - the path of the output .csv file
+    int mode - which shared memory array to choose from
+        0 -> array A
+        1 -> array B
+
+RETURN VALUE
+    1 - success
+    0 - fail
+*/
+int write_data(char* path, int mode);
+
+/*
+semaphore_setup
+    creates the semaphore that all the subproceeses share.
+    inits the value to the num_subprocesses argument
+
+ARGS
+    int num_processes - number of subprocesses to create (initial semaphore value)
+
+RETURN VALUE
+    1 - success
+    0 - fail
+*/
+int semaphore_setup(int num_subprocesses);
+
+/*
+shared_mem_setup
+    allocates the shared memory. Keys are predetermined.
+    Allocates array A, B and the coefficients.
+
+ARGS
+    vec3i size - size of space.
+
+RETURN VALUE
+    1 - success
+    0 - fail
+*/
+int shared_mem_setup(vec3i size);
+
+#endif
