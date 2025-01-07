@@ -34,9 +34,30 @@ int write_data(char* path, int mode);
 
 /*
 semaphore_setup
+    creates the semaphore that all the subproceeses share.
+    inits the value to the num_subprocesses argument
+
+ARGS
+    int num_processes - number of subprocesses to create (initial semaphore value)
+
+RETURN VALUE
+    1 - success
+    0 - fail
 */
 int semaphore_setup(int num_subprocesses);
 
-int shared_mem_setup(struct point3i size);
+/*
+shared_mem_setup
+    allocates the shared memory. Keys are predetermined.
+    Allocates array A, B and the coefficients.
+
+ARGS
+    vec3i size - size of space.
+
+RETURN VALUE
+    1 - success
+    0 - fail
+*/
+int shared_mem_setup(vec3i size);
 
 #endif
