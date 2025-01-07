@@ -4,7 +4,8 @@
 /*
 spawn_subprocess
     forks a subprocess that performs FDM calculations on a specific range
-    of data in shared memory. 
+    of data in shared memory. downs the semaphore relating to the 
+    shared memory.
 
 ARGS
     vec3i size - the size of the grid (in cells)

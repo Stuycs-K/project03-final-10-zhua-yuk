@@ -1,12 +1,40 @@
 #ifndef MEMORY_H
 #define MEMORY_H
-#include "config.h"
+#include "types.h"
+/*
+read_fdata
+    reads in initial conditions .csv file and allocates shared memory
+    and writes to it. Always writes to array A in shared memory
 
+ARGS
+    char* path - the path to the .csv file
 
-struct point3i read_fdata(char* path, int mode);
+RETURN VALUE
+    vec3i struct containing dimensions of the grid
+    values are all -1 if an error occured
+*/
+vec3i read_fdata(char* path);
 
+/*
+write_data
+    writes data from an array in shared memory to an output
+    .csv file. If the file doesn't exist, it creates it, then appends.
+
+ARGS
+    char* path - the path of the output .csv file
+    int mode - which shared memory array to choose from
+        0 -> array A
+        1 -> array B
+
+RETURN VALUE
+    1 - success
+    0 - fail
+*/
 int write_data(char* path, int mode);
 
+/*
+semaphore_setup
+*/
 int semaphore_setup(int num_subprocesses);
 
 int shared_mem_setup(struct point3i size);
