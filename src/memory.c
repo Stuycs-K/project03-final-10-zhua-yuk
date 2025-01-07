@@ -1,3 +1,4 @@
+#include "config.h"
 #include "memory.h"
 
 vec3i read_fdata(char* path) {

@@ -1,6 +1,6 @@
-#include "config.h"
 #ifndef FDMCALC_H
 #define FDMCALC_H
+#include "config.h"
 /*
 update_cell
     returns the new value of a cell given it's neighbors and the timestamp

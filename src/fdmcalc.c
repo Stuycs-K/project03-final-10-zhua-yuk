@@ -1,6 +1,8 @@
-#include "fdmcalc.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "fdmcalc.h"
+
 
 double update_cell(double cc, double* cn, double timestep, double coeff, double units) {
     double second_xROC = (cn[1] - 2*cc + cn[0])/units;
