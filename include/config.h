@@ -7,4 +7,6 @@
 #define SEMKEY 1535
 #define CELLS_PER_SP 0
 
+#define NUM_PARAMETERS 8
+
 #endif

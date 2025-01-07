@@ -1,8 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
 #include "config.h"
 #include "memory.h"
 
 vec3i read_fdata(char* path) {
 	vec3i out;
+	out.i = -1;
+	out.j = -1;
+	out.k = -1;
+
+	double ti, tf;
+	double dt;
+	double dd;
+	double units;
+	int num_materials;
+
+	char buff[255];
+	char** constants;
+	//open file
+	FILE* data = fopen(path, "r");
+
+	//read in constants
+	fgets(buff, 255, data);
+	constants = split(buff, ",");
+
+	//check if number of constants is correct
+	int p_count;
+	for (p_count=0; constants[p_count] != NULL; p_count++);
+	if (p_count+1 != NUM_PARAMETERS) {
+		fprintf(stderr, "Invalid number of arguments %d!\n", p_count);
+		return out;
+	}
+
+	//read in data
+	out.i = atoi(constants[0]);
+	out.j = atoi(constants[1]);
+	out.k = atoi(constants[2]);
+	ti = atof(constants[3]);
+	tf = atof(constants[4]);
+	dt = atof(constants[5]);
+	dd = atof(constants[6]);
+	units = atof(constants[7]);
+	num_materials = atoi(constants[8]);
+
+
+
+
+
+
 	return out;
 }
 
