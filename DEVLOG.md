@@ -22,10 +22,12 @@ Updated makefile (7 min)
 Created header file for fdmcalc.c (5 min)
 Created header file for constants (5 min)
 Created header file for memory.c (4 min)
+
 Wrote update_cell method to calculate the new temperature of a specific cell after a time step(7 min)
 Wrote update_row method to calculate the new temperatures for a row after a time step (10 min)
 Added descriptions for args and returns of update_cell and update_row methods (10 min)
 
 
-### 2024-01-03 - Brief description
-Expanded description including how much time was spent on task.
+### 2025-01-07 - update_row, update_layer
+Adjusted update_row method for 3D calculations (12 min)
+Updated h file for changes in update_row and update_layer (7 min)
