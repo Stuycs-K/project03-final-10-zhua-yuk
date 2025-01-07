@@ -7,4 +7,11 @@
 #define SEMKEY 1535
 #define CELLS_PER_SP 0
 
+struct point3i {
+	int i, k, k;
+}
+
+
+	
+
 #endif
