@@ -22,7 +22,7 @@ double update_cell(double cc, double* cn, double timestep, double coeff, double 
 
 /*
 update_row
-    returns the new values for a row given the neighboring rows' temperatures, coefficients, timestep, and units
+    updates newrow with new temperatures for a row given the neighboring rows' temperatures, coefficients, timestep, and units
 
 ARGS
     double * original - row of array temperatures
@@ -34,15 +34,16 @@ ARGS
     int i_max - number of cells in row
     double timestep - timestep
     double units - unit per cell length
+    double * newrow - row of updated temperatures
 Note: if there is no row above/below the given row, double * above or double * below will be an array full of 0s
 
 RETURN VALUE 
-    double array of row with updated temperatures
+    void
 */
-double * update_row(double * original, double * plusy, double * minusy, double * plusz, double * minusz, double * coeffs, int i_max, double timestep, double units);
+void update_row(double * original, double * plusy, double * minusy, double * plusz, double * minusz, double * coeffs, int i_max, double timestep, double units, double * newrow);
 /*
 update_layer
-    returns new temperatures for a layer given the temperatures of the layers directly above and below, coefficients, timestep, and units
+    updates newlayer with the new temperatures for a layer given the temperatures of the layers directly above and below, coefficients, timestep, and units
 
 ARGS
     double ** layer - 2D array of layer's temperatures
@@ -53,9 +54,12 @@ ARGS
     double timestep - timestep
     double units - unit per cell length
     double ** coeffs - 2D array of thermal diffusivity coefficients associated with each cell in the layer
+    double ** newlayer - 2D array of layer with updated temperatures
+    int mode - will edit from row 0 to last row if mode is 0 and will edit in reverse order (from last row to row 0) otherwise
 Note: if there is no layer above/below the given row, double ** above or double ** below are double ** with appropriate dimensions full of 0s
+
 RETURN VALUE
-    double ** array of layer with updated temperatures
+    void
 */
-double ** update_layer(double ** layer, double ** above, double ** below, int i_max, int j_max, double timestep, double units, double ** coeffs);
+void update_layer(double ** layer, double ** above, double ** below, int i_max, int j_max, double timestep, double units, double ** coeffs, double ** newlayer, int mode);
 #endif
