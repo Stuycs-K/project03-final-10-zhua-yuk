@@ -148,13 +148,12 @@ int write_data(char* path, vec3i size, int mode) {
 		if (i % size.j == 0) fprintf(out, "\n");
 		else fprintf(out, ",");
 	}
-	
+
 	return 1;
 }
 
 int semaphore_setup(int num_subprocesses) {
-
-	return 1;
+	return (semget(SEMKEY, num_subprocess, IPC_CREAT | IPC_EXCL | 0644) != -1);
 }
 
 int shared_mem_setup(vec3i size) {
