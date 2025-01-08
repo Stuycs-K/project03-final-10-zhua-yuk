@@ -1,6 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include "utils.h"
+#include "types.h"
+
+int getindex(int i, int j, int k, vec3i dimens) {
+    return (i*dimens.i + j*dimens.j + k*dimens.k);
+}
 
 char** split(char* s, char* delim) {
 	int size=0;
