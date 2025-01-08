@@ -20,9 +20,9 @@ size in x, size in y, size in z, start of time interval, end of time interval, t
 ```
 The following rows will contain a list of materials and their corresponding id:
 ```
-0, vacuum
-1, air
-2, copper
+0, 0.1, vacuum
+1, 0.2, air
+2, 0.3, copper
 .
 .
 .
@@ -55,6 +55,19 @@ We need to split up the calculations needed across various processes, which invo
 To find out when all calculations are completed and we are able to move onto the next time step, we will use semaphores, and each child will down the semaphore when it is spawned. When the semaphore value equals the amount of children spawned, then the calculations are complete. We don't need semaphores for writing to shared resources because each child will be assigned a seperate section of the array to work on. 
 
 If possible, we plan to create a python visualizer that uses matplotlib or similar graphics libraries to visually represent the data. We also hope to create a tool that makes the process of setting up initial conditions easier, possibly letting 3D models to be taken in, or simpler geometries. 
+
+# Distribution of work
+## MVP
+- Kellen: File I/O functions and handlers
+- Ashley: Shared memory management + Semaphores
+- Kellen: Sub-process creation and management functions
+- Ashley: FDM Calculation functions
+
+## Extra
+- Kellen: Visualization tool
+- Ashley: Initial setup tools
+
+
 
 # Intended pacing:
 - [x] 1/6 : Initial Proposal
