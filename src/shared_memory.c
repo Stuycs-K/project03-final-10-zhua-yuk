@@ -6,9 +6,11 @@
 #include <sys/shm.h>
 
 #include "config.h"
-#include "memory.h"
+#include "types.h"
+#include "utils.h"
+#include "shared_memory.h"
 
-vec3i read_fdata(char* path) {
+vec3i read_fdata(char* path, char* opath) {
 	vec3i out;
 	out.i = -1;
 
@@ -29,12 +31,18 @@ vec3i read_fdata(char* path) {
 	double* coeffs;
 	int* mats;
 
-	//open file
+	int size;
+
+	//open files
 	FILE* data = fopen(path, "r");
+	FILE* data_out = fopen(opath, "w");
 
 	//read in constants
 	fgets(buff, FILE_BUFF_SIZE, data);
 	constants = split(buff, ",");
+
+	//print it to metadata of out file
+	fputs(buff, data_out);
 
 	//check if number of constants is correct
 	for (p_count=0; constants[p_count] != NULL; p_count++);
@@ -53,12 +61,17 @@ vec3i read_fdata(char* path) {
 	dd = atof(constants[6]);
 	units = atof(constants[7]);
 	num_materials = atoi(constants[8]);
+	size = out.i*out.j*out.k;
 	free(constants);
 
 	//read in materials
 	matcoeffs = (double*)malloc(sizeof(double)*num_materials);
 	for (int i=0; i<num_materials; i++) {
-		fgets(bufff, 255, data);
+		fgets(buff, FILE_BUFF_SIZE, data);
+
+		//write it to the new file
+		fputs(buff, data_out);
+
 		constants = split(buff, ",");
 
 		//Check if correct number of args
@@ -79,21 +92,62 @@ vec3i read_fdata(char* path) {
 	}
 
 	//attach to shared memory
-	atemp = shmat(ATEMPKEY, 0, 0);
-	coeffs = shmat(COEFFKEY, 0, 0);
-	mats = shmat(MATKEY, 0, 0);
+	atemp = (double*)shmat(ATEMPKEY, 0, 0);
+	coeffs = (double*)shmat(COEFKEY, 0, 0);
+	mats = (int*)shmat(MATKEY, 0, 0);
 
 	//write to shared memory arrays
-	for (int i=0; i<out.i*out.j*out.k; i++) {
-		atemp[i] = fscanf(data, "%lf", (atemp+i));
-		mats[i] = fscanf(data, "%d", (mats+i));
+	//material arrays
+	for (int i=0; i<size; i++) {
+		if (fscanf(data, "%d", (mats+i)) == EOF) {
+			fprintf(stderr, "Not enough entries in file\n");
+			out.i = -1;
+			return out;
+		}
+		//write to out file
+		fprintf(data_out, "%d", mats[i]);
+		if (i % out.j == 0) fprintf(data_out, "\n");
+		else fprintf(data_out, ",");
+		
+		//write to mats array
 		coeffs[i] = matcoeffs[mats[i]];
 	}
-	
+	fprintf(data_out, "\n");
+	for (int i=0; i<size; i++) {
+		if (fscanf(data, "%lf", (atemp+i)) == EOF) {
+			fprintf(stderr, "Not enough entries in file\n");
+			out.i = -1;
+			return out;
+		}
+		//write to out file
+		fprintf(data_out, "%lf", atemp[i]);
+		if (i % out.j == 0) fprintf(data_out, "\n");
+		else fprintf(data_out, ",");
+	}
+	fprintf(data_out, "\n");
+
+	//close shared memory and files
+	shmdt(atemp);
+	shmdt(coeffs);
+	shmdt(mats);
+
+	fclose(data);
+	fclose(data_out);
+
 	return out;
 }
 
-int write_data(char* path, int mode) {
+int write_data(char* path, vec3i size, int mode) {
+	FILE* out = fopen(path, "w");
+	double* data;
+	if (mode) data = (double*)shmat(BTEMPKEY, 0, 0);
+	else data = (double*)shmat(ATEMPKEY, 0, 0);
+
+	for (int i=0; i<size.i*size.j*size.k; i++) {
+		fprintf(out, "%lf", data[i]);
+		if (i % size.j == 0) fprintf(out, "\n");
+		else fprintf(out, ",");
+	}
 	
 	return 1;
 }
@@ -104,8 +158,8 @@ int semaphore_setup(int num_subprocesses) {
 }
 
 int shared_mem_setup(vec3i size) {
-	int tsize = size.x*size.y*size.z;
-	if (shmget(COEFFKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
+	int tsize = size.i*size.j*size.k;
+	if (shmget(COEFKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
 	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
 	if (shmget(BTEMPKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
 	if (shmget(MATKEY, tsize*sizeof(int), IPC_CREAT) == -1) return 0;

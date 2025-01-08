@@ -1,21 +1,26 @@
 #ifndef MEMORY_H
 #define MEMORY_H
-#include "types.h"
-#define FILE_BUFF_SIZE 256;
 
+
+#define FILE_BUFF_SIZE 256
+#define OUT_FILE_PATH_SIZE 512
+
+#include "types.h"
 /*
 read_fdata
     reads in initial conditions .csv file and allocates shared memory
-    and writes to it. Always writes to array A in shared memory
+    and writes to it. Always writes to array A in shared memory.
+    Also creates the writing file and writes initial metadata to it.
 
 ARGS
     char* path - the path to the .csv file
+    char* opath - the path to the output .csv file
 
 RETURN VALUE
     vec3i struct containing dimensions of the grid
     values are all -1 if an error occured
 */
-vec3i read_fdata(char* path);
+vec3i read_fdata(char* path, char* opath);
 
 /*
 write_data
