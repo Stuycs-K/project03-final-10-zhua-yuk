@@ -31,3 +31,6 @@ Added descriptions for args and returns of update_cell and update_row methods (1
 ### 2025-01-07 - update_row, update_layer
 Adjusted update_row method for 3D calculations (12 min)
 Updated h file for changes in update_row and update_layer (7 min)
+
+Wrote update_layer method (20 min)
+Edited fdmcalc.h so update_row and update_layer directly change newrow and newlayer, respectively and accounted for mode (5 min) 
