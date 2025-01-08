@@ -47,6 +47,9 @@ vec3i read_fdata(char* path) {
 	units = atof(constants[7]);
 	num_materials = atoi(constants[8]);
 
+	//read in materials
+
+
 	//allocate shared memory
 
 
@@ -69,6 +72,17 @@ int semaphore_setup(int num_subprocesses) {
 }
 
 int shared_mem_setup(vec3i size) {
-
+	int tsize = size.x*size.y*size.z;
+	int memrets[4];
+	memrets[0] = shmget(COEFFKEY, tsize*sizeof(double), IPC_CREAT);
+	memrets[1] = shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT);
+	memrets[2] = shmget(BTEMPKEY, tsize*sizeof(double), IPC_CREAT);
+	memrets[3] = shmget(MATKEY, tsize*sizeof(double), IPC_CREAT);
+	//Check if all allocation was done successfully
+	for (int i=0; i<4; i++) {
+		if (memrets[i] == -1) {
+			return 0;
+		}
+	}
 	return 1;
 }
