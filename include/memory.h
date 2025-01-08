@@ -1,6 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 #include "types.h"
+#define FILE_BUFF_SIZE 512;
 
 /*
 read_fdata

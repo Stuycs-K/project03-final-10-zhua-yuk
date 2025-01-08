@@ -8,7 +8,7 @@ SRCDIR = src
 SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 
-TARGET = solver
+TARGET = main
 
 all: $(TARGET)
 

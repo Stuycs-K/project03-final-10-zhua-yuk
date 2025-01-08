@@ -11,26 +11,32 @@
 vec3i read_fdata(char* path) {
 	vec3i out;
 	out.i = -1;
-	out.j = -1;
-	out.k = -1;
 
 	double ti, tf;
 	double dt;
 	double dd;
 	double units;
+	double* matcoeffs;
 	int num_materials;
 
-	char buff[255];
+	char buff[FILE_BUFF_SIZE];
 	char** constants;
+
+	int p_count;
+
+	//shared memory segments
+	double* atemp;
+	double* coeffs;
+	int* mats;
+
 	//open file
 	FILE* data = fopen(path, "r");
 
 	//read in constants
-	fgets(buff, 255, data);
+	fgets(buff, FILE_BUFF_SIZE, data);
 	constants = split(buff, ",");
 
 	//check if number of constants is correct
-	int p_count;
 	for (p_count=0; constants[p_count] != NULL; p_count++);
 	if (p_count+1 != NUM_PARAMETERS) {
 		fprintf(stderr, "Invalid number of arguments %d!\n", p_count);
@@ -47,30 +53,53 @@ vec3i read_fdata(char* path) {
 	dd = atof(constants[6]);
 	units = atof(constants[7]);
 	num_materials = atoi(constants[8]);
+	free(constants);
 
 	//read in materials
-	double* coeff = (double*)malloc(sizeof(double)*num_materials);
-	
+	matcoeffs = (double*)malloc(sizeof(double)*num_materials);
+	for (int i=0; i<num_materials; i++) {
+		fgets(bufff, 255, data);
+		constants = split(buff, ",");
 
-	//allocate shared memory
+		//Check if correct number of args
+		for (p_count=0; constants[p_count] != NULL; p_count++);
+		if (p_count+1 != 3) {
+			fprintf(stderr, "Invalid number of material arguments %d!\n", p_count);
+			out.i = -1;
+			return out;
+		}
+
+		matcoeffs[atoi(constants[0])] = atof(constants[1]);
+		free(constants);
+	}
+
+	//allocate shared memory and attach to it
 	if (!shared_mem_setup(out)) {
 		fprintf(stderr, "Error with allocating shared memory: %s\n", strerror(errno));
 	}
 
-	//write to shared memory array
+	//attach to shared memory
+	atemp = shmat(ATEMPKEY, 0, 0);
+	coeffs = shmat(COEFFKEY, 0, 0);
+	mats = shmat(MATKEY, 0, 0);
 
-
-
-
-
+	//write to shared memory arrays
+	for (int i=0; i<out.i*out.j*out.k; i++) {
+		atemp[i] = fscanf(data, "%lf", (atemp+i));
+		mats[i] = fscanf(data, "%d", (mats+i));
+		coeffs[i] = matcoeffs[mats[i]];
+	}
+	
 	return out;
 }
 
 int write_data(char* path, int mode) {
+	
 	return 1;
 }
 
 int semaphore_setup(int num_subprocesses) {
+
 	return 1;
 }
 
@@ -79,6 +108,6 @@ int shared_mem_setup(vec3i size) {
 	if (shmget(COEFFKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
 	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
 	if (shmget(BTEMPKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
-	if (shmget(MATKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
+	if (shmget(MATKEY, tsize*sizeof(int), IPC_CREAT) == -1) return 0;
 	return 1;
 }
