@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "fdmcalc.h"
+#include "utils.h"
 
 
 double update_cell(double cc, double* cn, double timestep, double coeff, double units) {
