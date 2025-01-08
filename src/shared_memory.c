@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/sem.h>
 
 #include "config.h"
 #include "types.h"
@@ -153,7 +154,7 @@ int write_data(char* path, vec3i size, int mode) {
 }
 
 int semaphore_setup(int num_subprocesses) {
-	return (semget(SEMKEY, num_subprocess, IPC_CREAT | IPC_EXCL | 0644) != -1);
+	return (semget(SEMKEY, num_subprocesses, IPC_CREAT | IPC_EXCL | 0644) != -1);
 }
 
 int shared_mem_setup(vec3i size) {

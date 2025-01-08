@@ -37,7 +37,7 @@ RETURN VALUE
     1 - success
     0 - fail
 */
-int write_data(char* path, int mode);
+int write_data(char* path, vec3i size, int mode);
 
 /*
 semaphore_setup
