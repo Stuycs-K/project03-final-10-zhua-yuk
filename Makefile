@@ -1,14 +1,17 @@
-CC = gcc
-CFLAGS = -I./include
+CC := gcc
+CFLAGS := -I./include
 
-OBJDIR = build
-INCDIR = include
-SRCDIR = src
+OBJDIR := build
+INCDIR := include
+SRCDIR := src
 
-SRCS = $(wildcard $(SRCDIR)/*.c)
-OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
+IGNR := shared_memory.c fdmcalc.c subprocess.c 
+IGNR := $(addprefix $(SRCDIR)/, $(IGNR))
+SRCS := $(wildcard $(SRCDIR)/*.c)
+SRCS := $(filter-out $(IGNR), $(SRCS))
+OBJS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 
-TARGET = solver
+TARGET = main
 
 all: $(TARGET)
 
