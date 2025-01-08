@@ -14,7 +14,9 @@ This document must be updated daily by EACH group member.
 - updated headers and documentation for subprocess.h (5 min)
 - added types.h (3 min)
 
-### 2025-01-08
+### 2025-01-08 - completed shared_memory files and update makefile
+- added ignores for the makefile (15 min)
+- completed functions in shared_memory (changed the name of memory) (60 min)
 
 
 ## Ashley Zhu

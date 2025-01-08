@@ -29,7 +29,7 @@ The following rows will contain a list of materials and their corresponding id:
 ```
 Then the following rows will contain data to represent each layer of the grid. the x coordinate is the columns, the y coordinate is the rows, and the z coordinate is the "grouping" of rows and columns. 
 
-each entry will contain the thermal diffusivity coefficient followed by the initial temperature and then the material id. 
+each entry will contain the initial temperature and then the material id. 
 Here is a 2x2x2 grid example:
 ```
 0.1, 10, 1, 0.1, 10, 1
@@ -71,7 +71,7 @@ If possible, we plan to create a python visualizer that uses matplotlib or simil
 
 # Intended pacing:
 - [x] 1/6 : Initial Proposal
-- [ ] 1/8: FDM Calculation functions and File I/O functions complete
+- [x] 1/8: FDM Calculation functions and File I/O functions complete
 - [ ] 1/11: Shared memory management and Sub-process management complete
 - [ ] 1/12: Testing examples completed
 - [ ] 1/13: MVP completed
