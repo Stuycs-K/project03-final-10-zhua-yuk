@@ -45,3 +45,5 @@ This document must be updated daily by EACH group member.
 - Edited update_layer so that it takes in 1D arrays now instead of 2D arrays since we intend on storing 1D arrays in the shared memory (15 min) 
 - Adjusted fdmcalc.h for updates above (5 min)
 - Debugged pointer errors throughout fdmcalc.c methods (10 min)
+
+- Tested all fdmcalc methods and debugged errors with all zero rows in update_layer method (1 hour)
