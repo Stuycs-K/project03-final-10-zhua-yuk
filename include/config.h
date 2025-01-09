@@ -1,4 +1,4 @@
-#ifndef CONFIG_H__
+#ifndef CONFIG_H
 #define CONFIG_H__
 
 #define COEFKEY 12125
