@@ -15,7 +15,9 @@ ARGS
         0 -> from the start (0, 0, 0)
         1 -> from the end (i, j, k)
     int mode - which shared memory array is being written to
-
+        0 -> write to shared memory with ATEMPKEY
+        1 -> write to shared memory with BTEMPKEY
+        
 RETURN VALUE
     -1 (fail) something went wrong
     PID of subprocess
