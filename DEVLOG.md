@@ -45,3 +45,7 @@ This document must be updated daily by EACH group member.
 - Edited update_layer so that it takes in 1D arrays now instead of 2D arrays since we intend on storing 1D arrays in the shared memory (15 min) 
 - Adjusted fdmcalc.h for updates above (5 min)
 - Debugged pointer errors throughout fdmcalc.c methods (10 min)
+
+### 2025-01-09 - subprocess.h edits, fork and semaphores in subprocess.c
+- Specified mode in subprocess.h (3 min)
+- Forking, Downed Semaphore, Accessed Shared Memory (25 min)
