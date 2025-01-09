@@ -18,7 +18,8 @@ int spawn_subprocess(vec3i size, int ub, int lb, int order, int mode) {
         mysembuf.sem_op = -1;
         mysembuf.sem_num = 0; 
         semop(sem_des, mysembuf, 1);
-        
+        int readID = shmget(readFrom, sizeof(double)*size.i*size.j*size.k, IPC_RDONLY);
+        int writeID = shmget(readFrom, sizeof(double)*size.i*size.j*size.k, IPC_WRONLY);
     }
     else{
         return f;
