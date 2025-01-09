@@ -6,9 +6,9 @@
 
 
 double update_cell(double cc, double* cn, double timestep, double coeff, double units) {
-    double second_xROC = (cn[1] - 2*cc + cn[0])/units/units;
-    double second_yROC = (cn[3] - 2*cc + cn[2])/units/units;
-    double second_ZROC = (cn[5] - 2*cc + cn[4])/units/units;
+    double second_xROC = (cn[1] - 2*cc + cn[0])/units;
+    double second_yROC = (cn[3] - 2*cc + cn[2])/units;
+    double second_ZROC = (cn[5] - 2*cc + cn[4])/units;
     return timestep * coeff * (second_xROC + second_yROC + second_ZROC) + cc;
 }
 
@@ -41,13 +41,12 @@ void update_layer(double * layer, double * above, double * below, int i_max, int
         }
         double * plusy = allzerorow;
         double * minusy = allzerorow;
-        if(row==0){
-            update_row(layer+i_max*i, allzerorow, layer+i_max*(i+1), above+i_max*i, below+i_max*i, coeffs+i_max*i, i_max, timestep, units, newlayer+i_max*i);
+        if(row!=0){
+            * plusy = layer[i_max*(i-1)];
         }
-        else if(row==j_max-1){
-            update_row(layer+i_max*i, layer+i_max*(i-1), allzerorow, above+i_max*i, below+i_max*i, coeffs+i_max*i, i_max, timestep, units, newlayer+i_max*i);
+        if(row!=j_max-1){
+            * minusy=layer[i_max*(i+1)];
         }
-        else{
-        update_row(layer+i_max*i, layer+i_max*(i-1), layer+i_max*(i+1), above+i_max*i, below+i_max*i, coeffs+i_max*i, i_max, timestep, units, newlayer+i_max*i);
-    }}
+        update_row(layer+i_max*i, plusy, minusy, above+i_max*i, below+i_max*i, coeffs+i_max*i, i_max, timestep, units, newlayer+i_max*i);
+    }
 }
