@@ -46,6 +46,8 @@ This document must be updated daily by EACH group member.
 - Adjusted fdmcalc.h for updates above (5 min)
 - Debugged pointer errors throughout fdmcalc.c methods (10 min)
 
-### 2025-01-09 - subprocess.h edits, fork and semaphores in subprocess.c
+### 2025-01-09 - subprocess.h edits, wrote spawn_subprocess
 - Specified mode in subprocess.h (3 min)
 - Forking, Downed Semaphore, Accessed Shared Memory (25 min)
+
+- Wrote calls to update_layer in spawn_subprocess, attached shared memory to variable (50 min)
