@@ -23,12 +23,15 @@ int spawn_subprocess(vec3i size, int ub, int lb, int order, int mode, double tim
         mysembuf.sem_op = -1;
         mysembuf.sem_num = 0; 
         semop(sem_des, &mysembuf, 1);
-        int readID = shmget(readFrom, sizeof(double)*size.i*size.j*size.k, SHM_RDONLY);
-        int writeID = shmget(writeTo, sizeof(double)*size.i*size.j*size.k, SHM_WRONLY);
-        int coefID = shmget(12125, sizeof(double)*size.i*size.j*size.k, SHM_RDONLY);
-        int readFrom= shmat(readID, 0,0);
-        int writeTo = shmat(writeTo, 0,0);
-        int coeffs = shmat(coefID, 0,0);
+        int * readID;
+        * readID = shmget(readFrom, sizeof(double)*size.i*size.j*size.k, 0);
+        int * writeID;
+        * writeID = shmget(writeTo, sizeof(double)*size.i*size.j*size.k, 0);
+        int * coefID;
+        * coefID = shmget(12125, sizeof(double)*size.i*size.j*size.k, 0);
+        double * readFrom= shmat(*readID, 0,0);
+        double * writeTo = shmat(*writeID, 0,0);
+        double * coeffs = shmat(*coefID, 0,0);
         double * allzerolayer = (double *) calloc(size.i*size.j, sizeof(double));
         for(int layerindex = lb; layerindex<=ub; layerindex++){
             if(layerindex==size.k){ // last layer
