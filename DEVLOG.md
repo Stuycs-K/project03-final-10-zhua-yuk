@@ -18,6 +18,11 @@ This document must be updated daily by EACH group member.
 - added ignores for the makefile (15 min)
 - completed functions in shared_memory (changed the name of memory) (60 min)
 
+### 2025-01-09
+- Creating test input files (10 mins)
+- tweaking shared memory functions (20 mins)
+- debugging shared memory functions (40 mins)
+
 
 ## Ashley Zhu
 
