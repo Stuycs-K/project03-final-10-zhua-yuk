@@ -108,15 +108,22 @@ grid_dimen read_fdata(char* path, char* opath) {
 			if (!strcmp(constants[y], "\n")) {
 				break;
 			}
-			mats[y + i*out.size.i] = atoi(constants[y]);
-			coeffs[y + i*out.size.i] = out.matcoeffs[mats[y + i*out.size.i]];
-			
+			int mat = atoi(constants[y]);
+			mats[y + i*out.size.i] = mat;
+			coeffs[y + i*out.size.i] = out.matcoeffs[mat];
+
+			//write to out file
+			fprintf(data_out, "%d", mat);
+			if (constants[y+1] == NULL) {
+				fprintf(data_out, "\n");
+			}
+			else {
+				fprintf(data_out, ",");
+			}
 		}
 
 		free(constants);
 	}
-
-	fprintf(data_out, "\n");
 
 	//read in initial temperatures
 	for (int i=0; i<out.size.k*out.size.j; i++) {
@@ -129,7 +136,17 @@ grid_dimen read_fdata(char* path, char* opath) {
 			if (!strcmp(constants[y], "\n")) {
 				break;
 			}
-			atemp[y + i*out.size.i] = atof(constants[y]);
+			float temp = atof(constants[y]);
+			atemp[y + i*out.size.i] = temp;
+			
+			//write to out file
+			fprintf(data_out, "%lf", temp);
+			if (constants[y+1] == NULL) {
+				fprintf(data_out, "\n");
+			}
+			else {
+				fprintf(data_out, ",");
+			}
 		}
 
 		free(constants);
