@@ -33,6 +33,8 @@ void update_row(double * original, double * plusy, double * minusy, double * plu
 }
 
 void update_layer(double * layer, double * above, double * below, int i_max, int j_max, double timestep, double units, double * coeffs, double * newlayer, int mode){
+    i_max++;
+    j_max++;
     double * allzerorow = (double *) calloc(i_max, sizeof(double));
     for(int row = 0; row < j_max; row++){
         int i = j_max-1-row; // row reading
