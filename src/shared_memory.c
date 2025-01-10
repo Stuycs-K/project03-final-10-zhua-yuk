@@ -15,7 +15,7 @@ grid_dimen read_fdata(char* path, char* opath) {
 	grid_dimen out;
 	out.size.i = -1;
 
-	char buff[FILE_BUFF_SIZE];
+	char* buff = (char*)malloc(sizeof(char)*FILE_BUFF_SIZE);
 	char** constants;
 
 	int p_count;
@@ -94,15 +94,19 @@ grid_dimen read_fdata(char* path, char* opath) {
 	mats = shmat(shmget(MATKEY, 0, 0), 0, 0);
 
 	printf("attached\n");
+	free(buff);
 	//write to shared memory arrays
 	//material arrays
+	buff = (char*)malloc(sizeof(char)*out.size.i*20);
 	for (int i=0; i<size; i++) {
+		printf("scamf: %d\n", fscanf(data, "%d", (mats+i)));
+		/*
 		if (fscanf(data, "%d", (mats+i)) == EOF) {
 			fprintf(stderr, "Not enough entries in file\n");
 			out.size.i = -1;
 			return out;
 		}
-
+		*/
 		//write to out file
 		fprintf(data_out, "%d", mats[i]);
 		if ((i > 0) && ((i+1) % out.size.j == 0)) {
@@ -146,8 +150,12 @@ grid_dimen read_fdata(char* path, char* opath) {
 int write_data(char* path, vec3i size, int mode) {
 	FILE* out = fopen(path, "w");
 	double* data;
-	if (mode) data = (double*)shmat(BTEMPKEY, 0, 0);
-	else data = (double*)shmat(ATEMPKEY, 0, 0);
+	if (mode) {
+		data = shmat(shmget(BTEMPKEY, 0, 0), 0, 0);
+	}
+	else {
+		data = shmat(shmget(ATEMPKEY, 0, 0), 0, 0);
+	}
 
 	for (int i=0; i<size.i*size.j*size.k; i++) {
 		fprintf(out, "%lf", data[i]);
