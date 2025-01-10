@@ -53,3 +53,7 @@ This document must be updated daily by EACH group member.
 - Forking, Downed Semaphore, Accessed Shared Memory (25 min)
 
 - Wrote calls to update_layer in spawn_subprocess, attached shared memory to variable (50 min)
+
+### 2025-01-10 - subprocess.c debugging, updates for zero indexing
+- Addressed pointer errors when reading and writing to shared memory (15 min)
+- Edits for starting i, j, k at 0 in spawn_subprocess and update_layer methods (5 min)
