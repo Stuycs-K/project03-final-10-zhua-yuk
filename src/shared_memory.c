@@ -98,44 +98,43 @@ grid_dimen read_fdata(char* path, char* opath) {
 	//write to shared memory arrays
 	//material arrays
 	buff = (char*)malloc(sizeof(char)*out.size.i*20);
-	for (int i=0; i<size; i++) {
-		printf("scamf: %d\n", fscanf(data, "%d", (mats+i)));
-		/*
-		if (fscanf(data, "%d", (mats+i)) == EOF) {
-			fprintf(stderr, "Not enough entries in file\n");
-			out.size.i = -1;
-			return out;
+	for (int i=0; i<out.size.k*out.size.j; i++) {
+		//Read in line and split
+		fgets(buff, out.size.i*20, data);
+		constants = split(buff, ",");
+
+		//parse split data
+		for (int y=0; constants[y] != NULL; y++) {
+			if (!strcmp(constants[y], "\n")) {
+				break;
+			}
+			mats[y + i*out.size.i] = atoi(constants[y]);
+			coeffs[y + i*out.size.i] = out.matcoeffs[mats[y + i*out.size.i]];
+			
 		}
-		*/
-		//write to out file
-		fprintf(data_out, "%d", mats[i]);
-		if ((i > 0) && ((i+1) % out.size.j == 0)) {
-			fprintf(data_out, "\n");
-		}
-		else {
-			fprintf(data_out, ",");
-		}
-		printf("%d\n", mats[i]);
-		//write to mats array
-		coeffs[i] = out.matcoeffs[mats[i]];
+
+		free(constants);
 	}
-	printf("read mats\n");
+
 	fprintf(data_out, "\n");
-	for (int i=0; i<size; i++) {
-		if (fscanf(data, "%lf", (atemp+i)) == EOF) {
-			fprintf(stderr, "Not enough entries in file\n");
-			out.size.i = -1;
-			return out;
+
+	//read in initial temperatures
+	for (int i=0; i<out.size.k*out.size.j; i++) {
+		//Read in line and split
+		fgets(buff, out.size.i*20, data);
+		constants = split(buff, ",");
+
+		//parse split data
+		for (int y=0; constants[y] != NULL; y++) {
+			if (!strcmp(constants[y], "\n")) {
+				break;
+			}
+			atemp[y + i*out.size.i] = atof(constants[y]);
 		}
-		//write to out file
-		fprintf(data_out, "%lf", atemp[i]);
-		if ((i > 0) && ((i+1) % out.size.j == 0)) {
-			fprintf(data_out, "\n");
-		}
-		else {
-			fprintf(data_out, ",");
-		}
+
+		free(constants);
 	}
+
 	//close shared memory and files
 	shmdt(atemp);
 	shmdt(coeffs);
