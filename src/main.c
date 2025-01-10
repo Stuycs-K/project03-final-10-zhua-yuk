@@ -1,7 +1,10 @@
-#include <stdio.h>
+
 
 #include "config.h"
 #include "shared_memory.h"
+#include <stdlib.h>
+#include "fdmcalc.h"
+
 
 int main() {
 	grid_dimen out = read_fdata("test.csv", "out.csv");
