@@ -15,7 +15,7 @@ grid_dimen read_fdata(char* path, char* opath) {
 	grid_dimen out;
 	out.size.i = -1;
 
-	char buff[FILE_BUFF_SIZE];
+	char* buff = (char*)malloc(sizeof(char)*FILE_BUFF_SIZE);
 	char** constants;
 
 	int p_count;
@@ -89,42 +89,68 @@ grid_dimen read_fdata(char* path, char* opath) {
 	}
 
 	//attach to shared memory
-	atemp = (double*)shmat(ATEMPKEY, 0, 0);
-	coeffs = (double*)shmat(COEFKEY, 0, 0);
-	mats = (int*)shmat(MATKEY, 0, 0);
+	atemp = shmat(shmget(ATEMPKEY,0, 0), 0, 0);
+	coeffs = shmat(shmget(COEFKEY,0, 0), 0, 0);
+	mats = shmat(shmget(MATKEY, 0, 0), 0, 0);
 
 	printf("attached\n");
+	free(buff);
 	//write to shared memory arrays
 	//material arrays
-	for (int i=0; i<size; i++) {
-		if (fscanf(data, "%d", (mats+i)) == EOF) {
-			fprintf(stderr, "Not enough entries in file\n");
-			out.size.i = -1;
-			return out;
+	buff = (char*)malloc(sizeof(char)*out.size.i*20);
+	for (int i=0; i<out.size.k*out.size.j; i++) {
+		//Read in line and split
+		fgets(buff, out.size.i*20, data);
+		constants = split(buff, ",");
+
+		//parse split data
+		for (int y=0; constants[y] != NULL; y++) {
+			if (!strcmp(constants[y], "\n")) {
+				break;
+			}
+			int mat = atoi(constants[y]);
+			mats[y + i*out.size.i] = mat;
+			coeffs[y + i*out.size.i] = out.matcoeffs[mat];
+
+			//write to out file
+			fprintf(data_out, "%d", mat);
+			if (constants[y+1] == NULL) {
+				fprintf(data_out, "\n");
+			}
+			else {
+				fprintf(data_out, ",");
+			}
 		}
-		//write to out file
-		fprintf(data_out, "%d", mats[i]);
-		if (i % out.size.j == 0) fprintf(data_out, "\n");
-		else fprintf(data_out, ",");
-		
-		//write to mats array
-		coeffs[i] = out.matcoeffs[mats[i]];
+
+		free(constants);
 	}
-	printf("read mats\n");
-	fprintf(data_out, "\n");
-	for (int i=0; i<size; i++) {
-		if (fscanf(data, "%lf", (atemp+i)) == EOF) {
-			fprintf(stderr, "Not enough entries in file\n");
-			out.size.i = -1;
-			return out;
+
+	//read in initial temperatures
+	for (int i=0; i<out.size.k*out.size.j; i++) {
+		//Read in line and split
+		fgets(buff, out.size.i*20, data);
+		constants = split(buff, ",");
+
+		//parse split data
+		for (int y=0; constants[y] != NULL; y++) {
+			if (!strcmp(constants[y], "\n")) {
+				break;
+			}
+			float temp = atof(constants[y]);
+			atemp[y + i*out.size.i] = temp;
+			
+			//write to out file
+			fprintf(data_out, "%lf", temp);
+			if (constants[y+1] == NULL) {
+				fprintf(data_out, "\n");
+			}
+			else {
+				fprintf(data_out, ",");
+			}
 		}
-		//write to out file
-		fprintf(data_out, "%lf", atemp[i]);
-		if (i % out.size.j == 0) fprintf(data_out, "\n");
-		else fprintf(data_out, ",");
+
+		free(constants);
 	}
-	fprintf(data_out, "\n");
-	printf("close\n");
 
 	//close shared memory and files
 	shmdt(atemp);
@@ -140,12 +166,16 @@ grid_dimen read_fdata(char* path, char* opath) {
 int write_data(char* path, vec3i size, int mode) {
 	FILE* out = fopen(path, "w");
 	double* data;
-	if (mode) data = (double*)shmat(BTEMPKEY, 0, 0);
-	else data = (double*)shmat(ATEMPKEY, 0, 0);
+	if (mode) {
+		data = shmat(shmget(BTEMPKEY, 0, 0), 0, 0);
+	}
+	else {
+		data = shmat(shmget(ATEMPKEY, 0, 0), 0, 0);
+	}
 
 	for (int i=0; i<size.i*size.j*size.k; i++) {
 		fprintf(out, "%lf", data[i]);
-		if (i % size.j == 0) fprintf(out, "\n");
+		if ((i > 0) && (i % size.j == 0)) fprintf(out, "\n");
 		else fprintf(out, ",");
 	}
 
@@ -158,10 +188,10 @@ int semaphore_setup(int num_subprocesses) {
 
 int shared_mem_setup(vec3i size) {
 	int tsize = size.i*size.j*size.k;
-	if (shmget(COEFKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
-	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
-	if (shmget(BTEMPKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
-	if (shmget(MATKEY, tsize*sizeof(int), IPC_CREAT) == -1) return 0;
+	if (shmget(COEFKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
+	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
+	if (shmget(BTEMPKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
+	if (shmget(MATKEY, tsize*sizeof(int), IPC_CREAT | 0640) == -1) return 0;
 	return 1;
 }
 
