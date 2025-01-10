@@ -47,3 +47,9 @@ This document must be updated daily by EACH group member.
 - Debugged pointer errors throughout fdmcalc.c methods (10 min)
 
 - Tested all fdmcalc methods and debugged errors with all zero rows in update_layer method (1 hour)
+
+### 2025-01-09 - subprocess.h edits, wrote spawn_subprocess
+- Specified mode in subprocess.h (3 min)
+- Forking, Downed Semaphore, Accessed Shared Memory (25 min)
+
+- Wrote calls to update_layer in spawn_subprocess, attached shared memory to variable (50 min)
