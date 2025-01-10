@@ -11,16 +11,9 @@
 #include "utils.h"
 #include "shared_memory.h"
 
-vec3i read_fdata(char* path, char* opath) {
-	vec3i out;
-	out.i = -1;
-
-	double ti, tf;
-	double dt;
-	double dd;
-	double units;
-	double* matcoeffs;
-	int num_materials;
+grid_dimen read_fdata(char* path, char* opath) {
+	grid_dimen out;
+	out.size.i = -1;
 
 	char buff[FILE_BUFF_SIZE];
 	char** constants;
@@ -46,28 +39,30 @@ vec3i read_fdata(char* path, char* opath) {
 	fputs(buff, data_out);
 
 	//check if number of constants is correct
-	for (p_count=0; constants[p_count] != NULL; p_count++);
-	if (p_count+1 != NUM_PARAMETERS) {
+	for (p_count=0; constants[p_count] != NULL; p_count++) {
+		printf("%d: %s\n", p_count, constants[p_count]);
+	}
+	printf("done reading\n");
+	if (p_count != NUM_PARAMETERS) {
 		fprintf(stderr, "Invalid number of arguments %d!\n", p_count);
 		return out;
 	}
 
 	//read in data
-	out.i = atoi(constants[0]);
-	out.j = atoi(constants[1]);
-	out.k = atoi(constants[2]);
-	ti = atof(constants[3]);
-	tf = atof(constants[4]);
-	dt = atof(constants[5]);
-	dd = atof(constants[6]);
-	units = atof(constants[7]);
-	num_materials = atoi(constants[8]);
-	size = out.i*out.j*out.k;
+	out.size.i = atoi(constants[0]);
+	out.size.j = atoi(constants[1]);
+	out.size.k = atoi(constants[2]);
+	out.ti = atof(constants[3]);
+	out.tf = atof(constants[4]);
+	out.dt = atof(constants[5]);
+	out.units = atof(constants[6]);
+	out.num_materials = atoi(constants[7]);
+	size = out.size.i*out.size.j*out.size.k;
 	free(constants);
 
 	//read in materials
-	matcoeffs = (double*)malloc(sizeof(double)*num_materials);
-	for (int i=0; i<num_materials; i++) {
+	out.matcoeffs = (double*)malloc(sizeof(double)*out.num_materials);
+	for (int i=0; i<out.num_materials; i++) {
 		fgets(buff, FILE_BUFF_SIZE, data);
 
 		//write it to the new file
@@ -77,18 +72,19 @@ vec3i read_fdata(char* path, char* opath) {
 
 		//Check if correct number of args
 		for (p_count=0; constants[p_count] != NULL; p_count++);
-		if (p_count+1 != 3) {
+		if (p_count != 3) {
 			fprintf(stderr, "Invalid number of material arguments %d!\n", p_count);
-			out.i = -1;
+			out.size.i = -1;
 			return out;
 		}
 
-		matcoeffs[atoi(constants[0])] = atof(constants[1]);
+		out.matcoeffs[atoi(constants[0])] = atof(constants[1]);
+		printf("%d: %lf\n", i, out.matcoeffs[i]);
 		free(constants);
 	}
 
 	//allocate shared memory and attach to it
-	if (!shared_mem_setup(out)) {
+	if (!shared_mem_setup(out.size)) {
 		fprintf(stderr, "Error with allocating shared memory: %s\n", strerror(errno));
 	}
 
@@ -97,35 +93,38 @@ vec3i read_fdata(char* path, char* opath) {
 	coeffs = (double*)shmat(COEFKEY, 0, 0);
 	mats = (int*)shmat(MATKEY, 0, 0);
 
+	printf("attached\n");
 	//write to shared memory arrays
 	//material arrays
 	for (int i=0; i<size; i++) {
 		if (fscanf(data, "%d", (mats+i)) == EOF) {
 			fprintf(stderr, "Not enough entries in file\n");
-			out.i = -1;
+			out.size.i = -1;
 			return out;
 		}
 		//write to out file
 		fprintf(data_out, "%d", mats[i]);
-		if (i % out.j == 0) fprintf(data_out, "\n");
+		if (i % out.size.j == 0) fprintf(data_out, "\n");
 		else fprintf(data_out, ",");
 		
 		//write to mats array
-		coeffs[i] = matcoeffs[mats[i]];
+		coeffs[i] = out.matcoeffs[mats[i]];
 	}
+	printf("read mats\n");
 	fprintf(data_out, "\n");
 	for (int i=0; i<size; i++) {
 		if (fscanf(data, "%lf", (atemp+i)) == EOF) {
 			fprintf(stderr, "Not enough entries in file\n");
-			out.i = -1;
+			out.size.i = -1;
 			return out;
 		}
 		//write to out file
 		fprintf(data_out, "%lf", atemp[i]);
-		if (i % out.j == 0) fprintf(data_out, "\n");
+		if (i % out.size.j == 0) fprintf(data_out, "\n");
 		else fprintf(data_out, ",");
 	}
 	fprintf(data_out, "\n");
+	printf("close\n");
 
 	//close shared memory and files
 	shmdt(atemp);
@@ -164,4 +163,11 @@ int shared_mem_setup(vec3i size) {
 	if (shmget(BTEMPKEY, tsize*sizeof(double), IPC_CREAT) == -1) return 0;
 	if (shmget(MATKEY, tsize*sizeof(int), IPC_CREAT) == -1) return 0;
 	return 1;
+}
+
+int remove_shared_mem() {
+	shmctl(COEFKEY, IPC_RMID, 0);
+	shmctl(ATEMPKEY, IPC_RMID, 0);
+	shmctl(BTEMPKEY, IPC_RMID, 0);
+	shmctl(MATKEY, IPC_RMID, 0);
 }

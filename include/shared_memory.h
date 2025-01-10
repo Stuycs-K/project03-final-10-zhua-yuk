@@ -20,7 +20,7 @@ RETURN VALUE
     vec3i struct containing dimensions of the grid
     values are all -1 if an error occured
 */
-vec3i read_fdata(char* path, char* opath);
+grid_dimen read_fdata(char* path, char* opath);
 
 /*
 write_data
@@ -66,5 +66,8 @@ RETURN VALUE
     0 - fail
 */
 int shared_mem_setup(vec3i size);
+
+
+int remove_shared_mem();
 
 #endif
