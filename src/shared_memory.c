@@ -195,8 +195,14 @@ int shared_mem_setup(vec3i size) {
 }
 
 int remove_shared_mem() {
-	shmctl(shmget(COEFKEY, 0, 0), IPC_RMID, 0);
-	shmctl(shmget(ATEMPKEY, 0, 0), IPC_RMID, 0);
-	shmctl(shmget(BTEMPKEY, 0, 0), IPC_RMID, 0);
-	shmctl(shmget(MATKEY, 0, 0), IPC_RMID, 0);
+	if (shmctl(shmget(COEFKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	if (shmctl(shmget(ATEMPKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	if (shmctl(shmget(BTEMPKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	if (shmctl(shmget(MATKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	return 1;
+}
+
+int remove_semaphores() {
+	if (semctl(semget(SEMKEY, 0, 0), 0, IPC_RMID) == 0) return 0;
+	return 1;
 }

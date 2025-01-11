@@ -10,5 +10,7 @@ int main() {
     write_data("out.csv", dimen.size, 0);
     write_data("out.csv", dimen.size, 0);
     write_data("out.csv", dimen.size, 0);
+    semaphore_setup(4);
     remove_shared_mem();
+    //remove_semaphores();
 }

@@ -67,7 +67,28 @@ RETURN VALUE
 */
 int shared_mem_setup(vec3i size);
 
-
+/*
+remove shared_mem
+    deletes all shared memory arrays
+ARGS
+    none
+RETURN VALUE
+    1 - success
+    0 - fail
+    
+*/
 int remove_shared_mem();
+
+/*
+remove semaphores
+    removes semaphores created
+ARGS
+    none
+RETURN VALUE
+    1 - success
+    0 - fail
+*/
+int remove_semaphores();
+
 
 #endif
