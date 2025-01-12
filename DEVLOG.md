@@ -23,9 +23,6 @@ This document must be updated daily by EACH group member.
 - tweaking shared memory functions (20 mins)
 - debugging shared memory functions (40 mins)
 
-### 2025-01-10
-- Completed testing shared memory functions (45 mins)
-
 
 ## Ashley Zhu
 
@@ -65,3 +62,7 @@ This document must be updated daily by EACH group member.
 ### 2025-01-10 - subprocess.c debugging, updates for zero indexing
 - Addressed pointer errors when reading and writing to shared memory (15 min)
 - Edits for starting i, j, k at 0 in spawn_subprocess and update_layer methods (5 min)
+
+### 2025-01-10 - subprocess.c debugging, updates for zero indexing
+- Created main file to test subprocess.c (15 min)
+- Adding print statements and config.h variables to spawn_subprocess while debugging (40 min)
