@@ -63,6 +63,6 @@ This document must be updated daily by EACH group member.
 - Addressed pointer errors when reading and writing to shared memory (15 min)
 - Edits for starting i, j, k at 0 in spawn_subprocess and update_layer methods (5 min)
 
-### 2025-01-10 - subprocess.c debugging, updates for zero indexing
+### 2025-01-11 - testing subprocess.c (incomplete)
 - Created main file to test subprocess.c (15 min)
 - Adding print statements and config.h variables to spawn_subprocess while debugging (40 min)
