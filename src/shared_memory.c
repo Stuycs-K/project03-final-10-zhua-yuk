@@ -39,10 +39,7 @@ grid_dimen read_fdata(char* path, char* opath) {
 	fputs(buff, data_out);
 
 	//check if number of constants is correct
-	for (p_count=0; constants[p_count] != NULL; p_count++) {
-		printf("%d: %s\n", p_count, constants[p_count]);
-	}
-	printf("done reading\n");
+	for (p_count=0; constants[p_count] != NULL; p_count++);
 	if (p_count != NUM_PARAMETERS) {
 		fprintf(stderr, "Invalid number of arguments %d!\n", p_count);
 		return out;
@@ -79,7 +76,6 @@ grid_dimen read_fdata(char* path, char* opath) {
 		}
 
 		out.matcoeffs[atoi(constants[0])] = atof(constants[1]);
-		printf("%d: %lf\n", i, out.matcoeffs[i]);
 		free(constants);
 	}
 
@@ -93,10 +89,9 @@ grid_dimen read_fdata(char* path, char* opath) {
 	coeffs = shmat(shmget(COEFKEY,0, 0), 0, 0);
 	mats = shmat(shmget(MATKEY, 0, 0), 0, 0);
 
-	printf("attached\n");
-	free(buff);
 	//write to shared memory arrays
 	//material arrays
+	free(buff);
 	buff = (char*)malloc(sizeof(char)*out.size.i*20);
 	for (int i=0; i<out.size.k*out.size.j; i++) {
 		//Read in line and split
@@ -164,7 +159,7 @@ grid_dimen read_fdata(char* path, char* opath) {
 }
 
 int write_data(char* path, vec3i size, int mode) {
-	FILE* out = fopen(path, "w");
+	FILE* out = fopen(path, "a");
 	double* data;
 	if (mode) {
 		data = shmat(shmget(BTEMPKEY, 0, 0), 0, 0);
@@ -175,8 +170,12 @@ int write_data(char* path, vec3i size, int mode) {
 
 	for (int i=0; i<size.i*size.j*size.k; i++) {
 		fprintf(out, "%lf", data[i]);
-		if ((i > 0) && (i % size.j == 0)) fprintf(out, "\n");
-		else fprintf(out, ",");
+		if ((i > 0) && ((i-1) % size.j == 0)) {
+			fprintf(out, "\n");
+		}
+		else {
+			fprintf(out, ",");
+		}
 	}
 
 	return 1;
@@ -196,8 +195,14 @@ int shared_mem_setup(vec3i size) {
 }
 
 int remove_shared_mem() {
-	shmctl(COEFKEY, IPC_RMID, 0);
-	shmctl(ATEMPKEY, IPC_RMID, 0);
-	shmctl(BTEMPKEY, IPC_RMID, 0);
-	shmctl(MATKEY, IPC_RMID, 0);
+	if (shmctl(shmget(COEFKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	if (shmctl(shmget(ATEMPKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	if (shmctl(shmget(BTEMPKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	if (shmctl(shmget(MATKEY, 0, 0), IPC_RMID, 0) == -1) return 0;
+	return 1;
+}
+
+int remove_semaphores() {
+	if (semctl(semget(SEMKEY, 0, 0), 0, IPC_RMID) == 0) return 0;
+	return 1;
 }

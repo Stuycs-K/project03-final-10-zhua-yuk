@@ -10,15 +10,15 @@
 #include <stdlib.h>
 
 int spawn_subprocess(vec3i size, int ub, int lb, int order, int mode, double timestep, double units) {
-    int writeTo=4807;
-    int readFrom=11707;
+    int writeTo=BTEMPKEY;
+    int readFrom=ATEMPKEY;
     if(mode ==0){
-        writeTo=11707;
-        readFrom=4807;
+        writeTo=ATEMPKEY;
+        readFrom=BTEMPKEY;
     }
     int f = fork();
     if(f==0){
-        int sem_des = semget(1535, 1, 0);
+        int sem_des = semget(SEMKEY, 1, 0);
         struct sembuf mysembuf; 
         mysembuf.sem_op = -1;
         mysembuf.sem_num = 0; 

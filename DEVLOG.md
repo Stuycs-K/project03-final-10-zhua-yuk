@@ -23,6 +23,11 @@ This document must be updated daily by EACH group member.
 - tweaking shared memory functions (20 mins)
 - debugging shared memory functions (40 mins)
 
+### 2025-01-10
+- Completed testing shared memory functions (45 mins)
+
+### 2025-01-11
+- Created remove semaphore methods and debugged remove_shared_mem methods (20 mins)
 
 ## Ashley Zhu
 
