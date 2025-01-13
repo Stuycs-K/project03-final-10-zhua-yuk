@@ -71,3 +71,6 @@ This document must be updated daily by EACH group member.
 ### 2025-01-11 - testing subprocess.c (incomplete)
 - Created main file to test subprocess.c (15 min)
 - Adding print statements and config.h variables to spawn_subprocess while debugging (40 min)
+
+### 2025-01-13 - testing everything
+- Tested spawn_subprocesses, made main to test (35 min)
