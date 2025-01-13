@@ -27,22 +27,25 @@ int spawn_subprocess(vec3i size, int ub, int lb, int order, int mode, double tim
         mysembuf.sem_num = 0; 
         printf("going to down!\n");
         semop(sem_des, &mysembuf, 1); // down semaphore
-        int * readID;
-        printf("here! readKey: %d\n", readKey);
-        * readID = shmget(readKey, sizeof(double)*(size.i+1)*(size.j+1)*(size.k+1), IPC_CREAT); 
-        printf("here!\n");
-        int * writeID;
-        * writeID = shmget(writeKey, sizeof(double)*(size.i+1)*(size.j+1)*(size.k+1), 0); 
-        int * coefID;
-        * coefID = shmget(COEFKEY, sizeof(double)*(size.i+1)*(size.j+1)*(size.k+1), 0); 
-        double * readFrom= shmat(*readID, 0,0); // array writing updates to
-        double * writeTo = shmat(*writeID, 0,0); // array with original temps
-        double * coeffs = shmat(*coefID, 0,0); // array with coefficients
+        int readID=shmget(readKey, sizeof(double)*(size.i)*(size.j)*(size.k), IPC_CREAT); 
+        int writeID=shmget(writeKey, sizeof(double)*(size.i)*(size.j)*(size.k), 0); 
+        int coefID=shmget(COEFKEY, sizeof(double)*(size.i)*(size.j)*(size.k), 0); 
+        printf("read, write, coef IDs: %d %d %d\n", readID, writeID, coefID);
+        double * readFrom= shmat(readID, 0,0); // array writing updates to
+        for(int ind = 0; ind<8; ind++){
+            printf("[%d]: %f \n", ind, *(readFrom+ind));
+        }
+        double * writeTo = shmat(writeID, 0,0); // array with original temps
+        double * coeffs = shmat(coefID, 0,0); // array with coefficients
         double * allzerolayer = (double *) calloc(size.i*size.j, sizeof(double));
         printf(" lb: %d, ub: %d\n", lb, ub);
         for(int layerindex = lb; layerindex<=ub; layerindex++){ // calculate per layer
             if(layerindex==size.k-1){ // last layer
             printf("updating last layer\n");
+            double * p = readFrom+layerindex*size.i*size.j;
+            for(int ind = 0; ind<4; ind++){
+            printf("LL[%d]: %f \n", ind, *(p+ind));
+        }
                 update_layer(readFrom+layerindex*size.i*size.j, readFrom+(layerindex-1)*size.i*size.j, allzerolayer, size.i, size.j,timestep,units, coeffs+layerindex*size.i*size.j, writeTo+layerindex*size.i*size.j,order);
             }
             else if (layerindex ==0){ // first layer
