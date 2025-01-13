@@ -13,8 +13,7 @@ int main() {
     // printf("shared memory set up: %d\n",shared_mem_setup(size));
     // printf("semaphore set up: %d\n", semaphore_setup(0));
     grid_dimen dimensions= read_fdata("test.csv", "out.csv");
-    printf("wrote data: %d\n",write_data("out.csv", dimensions.size, 0) );
     spawn_subprocess(dimensions.size,1,0, 0,1, 10, 3);
     // printf("shmget works: %d\n", shmget(ATEMPKEY, sizeof(double)*(size.i+1)*(size.j+1)*(size.k+1), 0));
-    printf("%d\n",write_data("out.csv", dimensions.size, 0) );
+    printf("%d\n",write_data("out.csv", dimensions.size, 1) );
 }
