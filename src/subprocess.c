@@ -14,7 +14,7 @@
 int spawn_subprocess(vec3i size, int ub, int lb, int order, int mode, double timestep, double units) {
     int writeKey=BTEMPKEY;
     int readKey=ATEMPKEY;
-    if(mode ==0){
+    if(mode == 1){
         writeKey=ATEMPKEY;
         readKey=BTEMPKEY;
     }

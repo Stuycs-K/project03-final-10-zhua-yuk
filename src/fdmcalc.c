@@ -6,9 +6,9 @@
 
 
 double update_cell(double cc, double* cn, double timestep, double coeff, double units) {
-    double second_xROC = (cn[1] - 2*cc + cn[0])/units/units;
-    double second_yROC = (cn[3] - 2*cc + cn[2])/units/units;
-    double second_ZROC = (cn[5] - 2*cc + cn[4])/units/units;
+    double second_xROC = (cn[1] - 2*cc + cn[0])/(units*units);
+    double second_yROC = (cn[3] - 2*cc + cn[2])/(units*units);
+    double second_ZROC = (cn[5] - 2*cc + cn[4])/(units*units);
     return timestep * coeff * (second_xROC + second_yROC + second_ZROC) + cc;
 }
 

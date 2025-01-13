@@ -5,7 +5,7 @@ OBJDIR := build
 INCDIR := include
 SRCDIR := src
 
-IGNR := fdmcalc.h subprocess.h
+IGNR := 
 IGNR := $(IGNR:.h=.c)
 IGNR := $(addprefix $(SRCDIR)/, $(IGNR))
 SRCS := $(wildcard $(SRCDIR)/*.c)
