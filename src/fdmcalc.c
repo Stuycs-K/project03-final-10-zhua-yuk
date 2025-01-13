@@ -12,7 +12,15 @@ double update_cell(double cc, double* cn, double timestep, double coeff, double 
     return timestep * coeff * (second_xROC + second_yROC + second_ZROC) + cc;
 }
 
-void update_row(double * original, double * plusy, double * minusy, double * plusz, double * minusz, double * coeffs, int i_max, double timestep, double units, double * newrow){
+double update_cell(double* original, double* next, double* coeffs, vec3i dimens, vec3i coord) {
+    double xl = (coord.i > 0) ? original[get_index(coord.i-1, coord.j, coord.k, dimens)] : 0;
+
+}
+
+void update_row(double* curr, double* next, double* coeffs
+    
+    
+    double * original, double * plusy, double * minusy, double * plusz, double * minusz, double * coeffs, int i_max, double timestep, double units, double * newrow){
     for(int i = 0; i<i_max; i++){
         double * cn = malloc(sizeof(double)*6);
         cn[0] = 0;
