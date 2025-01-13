@@ -2,62 +2,46 @@
 #include <stdlib.h>
 
 #include "fdmcalc.h"
+#include "types.h"
 #include "utils.h"
 
 
-double update_cell(double cc, double* cn, double timestep, double coeff, double units) {
-    double second_xROC = (cn[1] - 2*cc + cn[0])/(units*units);
-    double second_yROC = (cn[3] - 2*cc + cn[2])/(units*units);
-    double second_ZROC = (cn[5] - 2*cc + cn[4])/(units*units);
-    return timestep * coeff * (second_xROC + second_yROC + second_ZROC) + cc;
+double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i coord) {
+    //x
+    double xl = (coord.i > 0) ? original[getindex(coord.i-1, coord.j, coord.k, dimens.size)] : 0;
+    double xr = (coord.i < dimens.size.i-1) ? original[getindex(coord.i+1, coord.j, coord.k, dimens.size)] : 0;
+    //y
+    double yl = (coord.j > 0) ? original[getindex(coord.i, coord.j-1, coord.k, dimens.size)] : 0;
+    double yr = (coord.j < dimens.size.j-1) ? original[getindex(coord.i, coord.j+1, coord.k, dimens.size)] : 0;
+    //z
+    double zl = (coord.k > 0) ? original[getindex(coord.i, coord.j, coord.k-1, dimens.size)] : 0;
+    double zr = (coord.k < dimens.size.k-1) ? original[getindex(coord.i, coord.j, coord.k+1, dimens.size)] : 0;
+
+    double cc = original[getindex(coord.i, coord.j, coord.k, dimens.size)];
+    double laplacian = ((xr - 2*cc + xl) + (yr - 2*cc + yl) + (zr - 2*cc + zl))/(dimens.units*dimens.units);
+
+    return dimens.dt*coeffs[getindex(coord.i, coord.j, coord.k, dimens.size)]*laplacian + cc;
 }
 
-double update_cell(double* original, double* next, double* coeffs, vec3i dimens, vec3i coord) {
-    double xl = (coord.i > 0) ? original[get_index(coord.i-1, coord.j, coord.k, dimens)] : 0;
-
-}
-
-void update_row(double* curr, double* next, double* coeffs
-    
-    
-    double * original, double * plusy, double * minusy, double * plusz, double * minusz, double * coeffs, int i_max, double timestep, double units, double * newrow){
-    for(int i = 0; i<i_max; i++){
-        double * cn = malloc(sizeof(double)*6);
-        cn[0] = 0;
-        cn[1] = 0;
-        if(i!=0){
-            cn[0] = original[i-1];
+void update_layer(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order) {
+    vec3i coord;
+    if (order) {
+        for (coord.i=start; coord.i<nend; coord.i++) {
+            for (coord.j=0; coord.j<dimens.size.j; coord.j++) {
+                for (coord.k=0; coord.k<dimens.size.k; coord.k++) {
+                    original[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
+                }
+            }
         }
-        if(i!=i_max-1){
-            cn[1] = original[i+1];
+    }
+    else {
+        for (coord.i=nend-1; coord.i>=0; coord.i--) {
+            for (coord.j=dimens.size.j-1; coord.j>=0; coord.j--) {
+                for (coord.k=dimens.size.k-1; coord.k>=0; coord.k--) {
+                    original[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
+                }
+            }
         }
-        cn[2]=minusy[i];
-        cn[3]=plusy[i];
-        cn[4]=plusz[i];
-        cn[5]=minusz[i];
-        newrow[i]=update_cell(original[i], cn, timestep, coeffs[i], units);
-        free(cn);
     }
 }
 
-void update_layer(double * layer, double * above, double * below, int i_max, int j_max, double timestep, double units, double * coeffs, double * newlayer, int mode){
-    i_max++;
-    j_max++;
-    double * allzerorow = (double *) calloc(i_max, sizeof(double));
-    for(int row = 0; row < j_max; row++){
-        int i = j_max-1-row; // row reading
-        if(mode ==0){
-            i=row; 
-        }
-        double * plusy = allzerorow;
-        double * minusy = allzerorow;
-        if(row==0){
-            update_row(layer+i_max*i, allzerorow, layer+i_max*(i+1), above+i_max*i, below+i_max*i, coeffs+i_max*i, i_max, timestep, units, newlayer+i_max*i);
-        }
-        else if(row==j_max-1){
-            update_row(layer+i_max*i, layer+i_max*(i-1), allzerorow, above+i_max*i, below+i_max*i, coeffs+i_max*i, i_max, timestep, units, newlayer+i_max*i);
-        }
-        else{
-        update_row(layer+i_max*i, layer+i_max*(i-1), layer+i_max*(i+1), above+i_max*i, below+i_max*i, coeffs+i_max*i, i_max, timestep, units, newlayer+i_max*i);
-    }}
-}
