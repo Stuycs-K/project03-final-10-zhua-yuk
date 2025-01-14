@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <config.h>
+#include <signal.h>
 
 void calculate_once(int mode) {
 	//Attach and down semaphore
