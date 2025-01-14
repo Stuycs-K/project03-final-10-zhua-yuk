@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -7,7 +8,7 @@
 #include "types.h"
 
 int getindex(int i, int j, int k, vec3i dimens) {
-    return (i*dimens.i + j*dimens.j + k*dimens.k);
+    return (i + j*dimens.i + k*dimens.j*dimens.i);
 }
 
 char** split(char* s, char* delim) {

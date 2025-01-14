@@ -25,6 +25,6 @@ RETURN VALUE
     -1 (fail) something went wrong
     PID of subprocess
 */
-int spawn_subprocess(vec3i size, int ub, int lb, int order, int mode, double timestep, double units);
+int spawn_subprocess(grid_dimen dimens, int start, int nend, int order, int mode);
 
 #endif
