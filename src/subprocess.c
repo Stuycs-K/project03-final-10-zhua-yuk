@@ -54,8 +54,6 @@ void calculate_once (vec3i size, int ub, int lb, int order, int mode, double tim
 }
 
 static void sighandler(int signo){
-    int consID=shmget(CONSKEY, 4, 0); 
-    double * writeTo = shmat(consID, 0,0); 
     if(signo == QUIT){
         exit(0);
     }
