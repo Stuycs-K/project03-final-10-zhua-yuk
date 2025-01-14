@@ -29,6 +29,18 @@ This document must be updated daily by EACH group member.
 ### 2025-01-11
 - Created remove semaphore methods and debugged remove_shared_mem methods (20 mins)
 
+### 2025-01-11
+- Created remove semaphore methods and debugged remove_shared_mem methods (20 mins)
+- 
+
+### 2024-01-12
+- Researched finite difference method further (30 mins) (r < 1/2)
+- Started planning out child and parent communication protocols (20 mins)
+
+### 2025-01-13
+- Debugged getindex() method (10 mins)
+- debugged fdmcalc functions, rewrote in a cleaner manner (30 mins)
+
 ## Ashley Zhu
 
 ### 2025-01-06 - readme, makefile, fdmcalc.c, fdmcalc.h, config.h, memory.h
