@@ -9,17 +9,9 @@ calculate_once
     shared memory.
 
 ARGS
-    vec3i size - the size of the grid (in cells)
-    int ub - upper bound layer index
-    int lb - lower bound layer index
-    int order - what order to approach the array from (to minimize race conditions)
-        0 -> from the start (0, 0, 0)
-        1 -> from the end (i, j, k)
     int mode - which shared memory array is being written to
         0 -> write to shared memory with ATEMPKEY
         1 -> write to shared memory with BTEMPKEY
-    double timestep - calculation's timestep
-    double units - unit per cell length
         
 RETURN VALUE
     void
@@ -43,7 +35,11 @@ static void sighandler(int signo);
 spawn_subprocess
     forks and attaches signals to child subprocess
 ARGS
-    none
+    int start - lower bound layer index (inclusive)
+    int nend - upper bound layer index (not inclusive)
+    int order - what order to approach the array from (to minimize race conditions)
+        0 -> from the start (0, 0, 0)
+        1 -> from the end (i, j, k)
 RETURN VALUE
     -1 (fail) something went wrong
     PID of subprocess
