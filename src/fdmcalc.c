@@ -23,13 +23,13 @@ double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i co
     return dimens.dt*coeffs[getindex(coord.i, coord.j, coord.k, dimens.size)]*laplacian + cc;
 }
 
-void update_layer(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order) {
+void update_layers(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order) {
     vec3i coord;
     if (order) {
         for (coord.i=start; coord.i<nend; coord.i++) {
             for (coord.j=0; coord.j<dimens.size.j; coord.j++) {
                 for (coord.k=0; coord.k<dimens.size.k; coord.k++) {
-                    original[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
+                    next[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
                 }
             }
         }
@@ -38,7 +38,8 @@ void update_layer(double* original, double* next, double* coeffs, grid_dimen dim
         for (coord.i=nend-1; coord.i>=0; coord.i--) {
             for (coord.j=dimens.size.j-1; coord.j>=0; coord.j--) {
                 for (coord.k=dimens.size.k-1; coord.k>=0; coord.k--) {
-                    original[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
+                    //printf("C: %lf, (%d, %d, %d)\n", original[getindex(coord.i, coord.j, coord.k, dimens.size)], coord.i, coord.j, coord.k);
+                    next[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
                 }
             }
         }

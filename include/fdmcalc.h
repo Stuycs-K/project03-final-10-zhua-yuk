@@ -42,5 +42,5 @@ Note: if there is no layer above/below the given row, double ** above or double 
 RETURN VALUE
     void
 */
-void update_layer(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order);
+void update_layers(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order);
 #endif
