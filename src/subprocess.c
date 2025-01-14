@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <config.h>
+#include <signal.h>
 
 extern grid_dimen DIMENSIONS;
 extern int START, NEND, ORDER;
