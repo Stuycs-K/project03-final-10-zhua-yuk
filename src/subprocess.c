@@ -11,7 +11,15 @@
 #include <stdio.h>
 #include <config.h>
 
-int spawn_subprocess(grid_dimen dimens, int start, int nend, int order, int mode) {
+extern grid_dimen DIMENSIONS;
+extern int START, NEND, ORDER;
+
+int spawn_subprocess(int start, int nend, int order) { 
+    //edit static vars
+    START = start;
+    NEND = nend;
+    ORDER = order;
+
     //Fork process
     int f = fork();
 
@@ -30,10 +38,10 @@ int spawn_subprocess(grid_dimen dimens, int start, int nend, int order, int mode
         double* coeffs = shmat(shmget(COEFKEY, 0, 0), 0, 0);
 
         if (mode) {
-            update_layers(btemp, atemp, coeffs, dimens, start, nend, order);
+            update_layers(btemp, atemp, coeffs, DIMENSIONS, start, nend, order);
         }
         else {
-            update_layers(atemp, btemp, coeffs, dimens, start, nend, order);
+            update_layers(atemp, btemp, coeffs, DIMENSIONS, start, nend, order);
         }
 
         //detach from shared memory
