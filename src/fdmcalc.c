@@ -19,7 +19,9 @@ double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i co
 
     double cc = original[getindex(coord.i, coord.j, coord.k, dimens.size)];
     double laplacian = ((xr - 2*cc + xl) + (yr - 2*cc + yl) + (zr - 2*cc + zl))/(dimens.units*dimens.units);
-
+    printf("coef: %lf\n", coeffs[getindex(coord.i, coord.j, coord.k, dimens.size)]);
+    printf("lap: %lf\n", laplacian);
+    printf("units: %lf\n", dimens.units);
     return dimens.dt*coeffs[getindex(coord.i, coord.j, coord.k, dimens.size)]*laplacian + cc;
 }
 
