@@ -11,8 +11,8 @@
 #include <time.h>
 #include <unistd.h>
 
-static grid_dimen DIMENSIONS;
-static int START, NEND, ORDER;
+grid_dimen DIMENSIONS;
+int START, NEND, ORDER;
 
 int main() {
     DIMENSIONS = read_fdata("test.csv", "out.csv");

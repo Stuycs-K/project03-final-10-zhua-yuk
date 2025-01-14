@@ -11,9 +11,6 @@
 #include <stdio.h>
 #include <config.h>
 
-extern grid_dimen DIMENSIONS;
-extern int START, NEND, ORDER;
-
 void calculate_once(int mode) {
 	//Attach and down semaphore
         struct sembuf operation; 
@@ -27,10 +24,10 @@ void calculate_once(int mode) {
         double* coeffs = shmat(shmget(COEFKEY, 0, 0), 0, 0);
 
         if (mode) {
-            update_layers(btemp, atemp, coeffs, DIMENSIONS, start, nend, order);
+            update_layers(btemp, atemp, coeffs, DIMENSIONS, START, NEND, ORDER);
         }
         else {
-            update_layers(atemp, btemp, coeffs, DIMENSIONS, start, nend, order);
+            update_layers(atemp, btemp, coeffs, DIMENSIONS, START, NEND, ORDER);
         }
 
         //detach from shared memory

@@ -2,6 +2,9 @@
 #define SUBPROCESS_H
 #include "types.h"
 
+extern grid_dimen DIMENSIONS;
+extern int START, NEND, ORDER;
+
 /*
 calculate_once
     performs FDM calculations on a specific range
