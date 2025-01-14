@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <config.h>
 
-int calculate_once (vec3i size, int ub, int lb, int order, int mode, double timestep, double units) {
+void calculate_once (vec3i size, int ub, int lb, int order, int mode, double timestep, double units) {
     int writeKey=BTEMPKEY;
     int readKey=ATEMPKEY;
     if(mode == 1){
@@ -63,7 +63,7 @@ static void sighandler(int signo){
     }
 }
 
-int spawn_subprocess(vec3i size, int ub, int lb, int order, int mode, double timestep, double units) {
+int spawn_subprocess() {
     int f = fork();
     if(f!=0){// return pid if parent
         return f;
