@@ -1,5 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
+#define NUM_MATERIALS 256
 
 typedef struct {
     int i, j, k;
@@ -10,7 +11,7 @@ typedef struct {
     double ti, tf;
     double dt;
     double units;
-    double* matcoeffs;
+    double matcoeffs[NUM_MATERIALS];
     int num_materials;
 } grid_dimen;
 

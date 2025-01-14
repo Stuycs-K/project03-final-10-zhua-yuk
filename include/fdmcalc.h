@@ -1,6 +1,8 @@
 #ifndef FDMCALC_H
 #define FDMCALC_H
 #include "config.h"
+#include "types.h"
+
 /*
 update_cell
     returns the new value of a cell given it's neighbors and the timestamp
@@ -18,29 +20,7 @@ ARGS
 RETURN VALUE
     new temperature of selected cell
 */
-double update_cell(double cc, double* cn, double timestep, double coeff, double units);
-
-/*
-update_row
-    updates newrow with new temperatures for a row given the neighboring rows' temperatures, coefficients, timestep, and units
-
-ARGS
-    double * original - row of array temperatures
-    double * plusy - row of temperatures above in same layer (+1 y)
-    double * minusy - row of temperatures below in same layer (-1 y)
-    double * plusz - row of temperatures in row of layer above (+1 z)
-    double * minusz - row of temperatures in row of layer below (-1 z)
-    double * coeffs - array of thermal coefficients for the row
-    int i_max - number of cells in row
-    double timestep - timestep
-    double units - unit per cell length
-    double * newrow - row of updated temperatures
-Note: if there is no row above/below the given row, double * above or double * below will be an array full of 0s
-
-RETURN VALUE 
-    void
-*/
-void update_row(double * original, double * plusy, double * minusy, double * plusz, double * minusz, double * coeffs, int i_max, double timestep, double units, double * newrow);
+double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i coord);
 
 /*
 update_layer
@@ -62,5 +42,5 @@ Note: if there is no layer above/below the given row, double ** above or double 
 RETURN VALUE
     void
 */
-void update_layer(double * layer, double * above, double * below, int i_max, int j_max, double timestep, double units, double * coeffs, double * newlayer, int mode);
+void update_layers(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order);
 #endif

@@ -24,7 +24,7 @@ ARGS
 RETURN VALUE
     void
 */
-void calculate_once(vec3i size, int ub, int lb, int order, int mode, double timestep, double units);
+void calculate_once(int mode);
 
 /*
 sighandler
@@ -48,5 +48,6 @@ RETURN VALUE
     -1 (fail) something went wrong
     PID of subprocess
 */
-int spawn_subprocess();
+int spawn_subprocess(int start, int nend, int order);
+
 #endif
