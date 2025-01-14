@@ -25,7 +25,7 @@ void calculate_once (vec3i size, int ub, int lb, int order, int mode, double tim
         mysembuf.sem_op = -1;
         mysembuf.sem_num = 0; 
         semop(sem_des, &mysembuf, 1); // down semaphore
-        int readID=shmget(readKey, sizeof(double)*(size.i)*(size.j)*(size.k), IPC_CREAT); 
+        int readID=shmget(readKey, sizeof(double)*(size.i)*(size.j)*(size.k), 0); 
         int writeID=shmget(writeKey, sizeof(double)*(size.i)*(size.j)*(size.k), 0); 
         int coefID=shmget(COEFKEY, sizeof(double)*(size.i)*(size.j)*(size.k), 0); 
         double * readFrom= shmat(readID, 0,0); // array writing updates to
@@ -47,7 +47,6 @@ void calculate_once (vec3i size, int ub, int lb, int order, int mode, double tim
         shmdt(writeTo);
         mysembuf.sem_op = 1;
         semop(sem_des, &mysembuf, 1); // up semaphore
-        exit(0);
     }
     else{
         return f;
@@ -55,11 +54,16 @@ void calculate_once (vec3i size, int ub, int lb, int order, int mode, double tim
 }
 
 static void sighandler(int signo){
+    int consID=shmget(CONSKEY, 4, 0); 
+    double * writeTo = shmat(consID, 0,0); 
     if(signo == QUIT){
         exit(0);
     }
     else if (signo == ACALCB){
-    
+        calculate_once (DIMENSIONS.size, NEND, START , ORDER, 0, DIMENSIONS.dt, DIMENSIONS.units);
+    }
+    else if (signo == BCALCA){
+        calculate_once (DIMENSIONS.size, NEND, START , ORDER, 1, DIMENSIONS.dt, DIMENSIONS.units);
     }
 }
 
