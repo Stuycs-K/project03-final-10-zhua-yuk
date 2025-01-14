@@ -41,6 +41,11 @@ This document must be updated daily by EACH group member.
 - Debugged getindex() method (10 mins)
 - debugged fdmcalc functions, rewrote in a cleaner manner (30 mins)
 
+### 2025-01-14
+- merged new signal handling together with subprocess (20 mins)
+- set constants to be as global variables (20 mins)
+- started working with gnuplot program for rendering (20 mins)
+
 ## Ashley Zhu
 
 ### 2025-01-06 - readme, makefile, fdmcalc.c, fdmcalc.h, config.h, memory.h
