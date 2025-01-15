@@ -58,7 +58,6 @@ grid_dimen read_fdata(char* path, char* opath) {
 	free(constants);
 
 	//read in materials
-	out.matcoeffs = (double*)malloc(sizeof(double)*out.num_materials);
 	for (int i=0; i<out.num_materials; i++) {
 		fgets(buff, FILE_BUFF_SIZE, data);
 

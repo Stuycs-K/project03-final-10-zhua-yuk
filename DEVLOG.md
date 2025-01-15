@@ -84,5 +84,13 @@ This document must be updated daily by EACH group member.
 - Created main file to test subprocess.c (15 min)
 - Adding print statements and config.h variables to spawn_subprocess while debugging (40 min)
 
-### 2025-01-13 - testing everything
+### 2025-01-13 - testing, sighandler
 - Tested spawn_subprocesses, made main to test (35 min)
+
+- Divided spawn_subprocess into spawn_subprocess (for forking and attaching signals) and calculate_once, started sighandler (25 min)
+- Updated subprocess.h for changes (5 min)
+
+### 2025-01-14 - signals in subprocess.c, main method
+- Completed sighandler ACALCB and BCALCA management (5 min)
+- Updated subprocess.h for changes in methods (5 min)
+- Get semaphore value in main (5 min)
