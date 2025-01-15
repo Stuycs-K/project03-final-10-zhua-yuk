@@ -97,3 +97,7 @@ This document must be updated daily by EACH group member.
 
 - spawned subprocesses in main, divided calculations for one time step (40 min)
 - edited sighandler so computes for multiple rows when signal received (5 min)
+
+### 2025-01-15 - signal sending in main, semaphore setup
+-  Fixed semaphore setup value (10 min)
+- Sent signals in main (20 min)
