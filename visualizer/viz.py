@@ -42,7 +42,7 @@ def read_file(path):
         MATERIALS = [0] * n_mats
         for i in range(n_mats):
             m = data[1+i].split(",")
-            MATERIALS[int(m[0])] = [float(m[1]), m[2]]
+            MATERIALS[int(m[0])] = [float(m[1]), m[2], False]
             print(f"\t[{m[0]}]: {m[2]} : {m[1]}")
 
         #allocate MAT array
