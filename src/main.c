@@ -44,6 +44,7 @@ int main() {
       }
       order++;
     }
+    while(semVal!=num_SP);
     if(getpid()==parentPID){
       int timesteps_done = 1;
       printf("%d\n",write_data("out.csv", DIMENSIONS.size, 1));
@@ -56,10 +57,11 @@ int main() {
             kill(subprocessPIDs[i], BCALCA);
           }
         }
+        while(semVal!=num_SP);
         timesteps_done++;
         write_data("out.csv", DIMENSIONS.size, timesteps_done%2);
       }
     }
-    sleep(1);
+    // sleep(1);
     // printf("myPID: %d\n", getpid());
 }
