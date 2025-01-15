@@ -15,11 +15,6 @@
 
 grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
-union semun {
-  int val;                  
-  struct semid_ds *buf;     
-  unsigned short  *array;   
-  struct seminfo  *__buf;};
 
 int main() {
     DIMENSIONS = read_fdata("test.csv", "out.csv");
@@ -27,6 +22,7 @@ int main() {
     int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); 
     int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
     int * subprocessPIDs = malloc(sizeof(int)*num_SP);
+    printf("num SP: %d, ts: %d, layers each: %d\n",num_SP, num_timesteps, LAYERS_PER_SP);
     int order = 0;
     int parentPID = getpid();
     semaphore_setup(num_SP);
@@ -48,8 +44,9 @@ int main() {
       order++;
     }
     printf("here3\n");
-    while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
     if(getpid()==parentPID){
+      printf("kldjlkfaj\n");
+      while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
       int timesteps_done = 1;
       printf("%d\n",write_data("out.csv", DIMENSIONS.size, 1));
       printf("here2\n");
