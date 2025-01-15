@@ -94,3 +94,6 @@ This document must be updated daily by EACH group member.
 - Completed sighandler ACALCB and BCALCA management (5 min)
 - Updated subprocess.h for changes in methods (5 min)
 - Get semaphore value in main (5 min)
+
+- spawned subprocesses in main, divided calculations for one time step (40 min)
+- edited sighandler so computes for multiple rows when signal received (5 min)
