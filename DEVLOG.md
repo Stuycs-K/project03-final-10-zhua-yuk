@@ -41,6 +41,11 @@ This document must be updated daily by EACH group member.
 - Debugged getindex() method (10 mins)
 - debugged fdmcalc functions, rewrote in a cleaner manner (30 mins)
 
+### 2025-01-14
+- merged new signal handling together with subprocess (20 mins)
+- set constants to be as global variables (20 mins)
+- started working with python program for rendering (40 mins)
+
 ## Ashley Zhu
 
 ### 2025-01-06 - readme, makefile, fdmcalc.c, fdmcalc.h, config.h, memory.h
@@ -98,6 +103,9 @@ This document must be updated daily by EACH group member.
 - spawned subprocesses in main, divided calculations for one time step (40 min)
 - edited sighandler so computes for multiple rows when signal received (5 min)
 
+<<<<<<< HEAD
 ### 2025-01-15 - signal sending in main, semaphore setup
 -  Fixed semaphore setup value (10 min)
 - Sent signals in main (20 min)
+=======
+>>>>>>> 708e2a7756d745c31f92ed99fff1d708d0ca6bc4
