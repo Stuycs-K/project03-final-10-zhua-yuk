@@ -46,10 +46,14 @@ static void sighandler(int signo){
         exit(0);
     }
     else if (signo == ACALCB){
-        calculate_once(0);
+        for(int i = START; i<NEND; i++){
+            calculate_once(0);
+        }
     }
     else if (signo == BCALCA){
-        calculate_once(1);
+        for(int i = START; i<NEND; i++){
+            calculate_once(1);
+        }
     }
 }
 
