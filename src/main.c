@@ -34,11 +34,15 @@ int main(int argc, char** argv) {
     }
     int n_timesteps = ceil(DIMENSIONS.tf/DIMENSIONS.dt);
     //Spawn subprocesses
-    int n_subprocesses = 0;
+    int n_cells = DIMENSIONS.size.i*DIMENSIONS.size.j*DIMENSIONS.size.k
+    int n_subprocesses = (n_cells < CELLS_PER_SP) ? 1 : n_cells/CELLS_PER_SP;
+
+    int* subprocesses = (int*)malloc(sizeof(int)*n_subprocesses);
     for (int i=0; i<n_subprocesses; i++) {
-        
+        subprocesses[i] = spawn_subprocess(i*)
     }
     for (int i=0; i<n_timesteps; i++) {
+        
     }
 
 }
