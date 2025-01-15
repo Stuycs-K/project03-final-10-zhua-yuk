@@ -44,7 +44,7 @@ This document must be updated daily by EACH group member.
 ### 2025-01-14
 - merged new signal handling together with subprocess (20 mins)
 - set constants to be as global variables (20 mins)
-- started working with gnuplot program for rendering (20 mins)
+- started working with python program for rendering (40 mins)
 
 ## Ashley Zhu
 
