@@ -181,7 +181,11 @@ int write_data(char* path, vec3i size, int mode) {
 }
 
 int semaphore_setup(int num_subprocesses) {
-	return (semget(SEMKEY, num_subprocesses, IPC_CREAT | IPC_EXCL | 0644) != -1);
+	union semun semDATA;
+	semDATA.val = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
+	int semDes = (semget(SEMKEY, num_subprocesses, IPC_CREAT | IPC_EXCL | 0644) != -1);
+	semctl(semDes, 0, SETVAL, semDATA);
+	return semDes;
 }
 
 int shared_mem_setup(vec3i size) {

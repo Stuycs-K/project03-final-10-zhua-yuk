@@ -11,6 +11,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
+#include <signal.h>
 
 grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
@@ -23,13 +24,15 @@ union semun {
 int main() {
     DIMENSIONS = read_fdata("test.csv", "out.csv");
     union semun semDATA;
-    int semVal = semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA);
     int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); 
     int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
     int * subprocessPIDs = malloc(sizeof(int)*num_SP);
     int order = 0;
     int parentPID = getpid();
+    semaphore_setup(num_SP);
+    int semVal = semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA);
     printf("parentPID: %d\n", parentPID);
+    printf("semaphore value: %d\n", semVal);
     for(int layers_done = 0; layers_done <DIMENSIONS.size.k; layers_done+=LAYERS_PER_SP){ 
       // add subprocesses' PIDs to subprocessPIDs array, spawn processes, run 1 timestep calculation
       int subPID = 0; 
@@ -44,10 +47,12 @@ int main() {
       }
       order++;
     }
-    while(semVal!=num_SP);
+    printf("here3\n");
+    while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
     if(getpid()==parentPID){
       int timesteps_done = 1;
       printf("%d\n",write_data("out.csv", DIMENSIONS.size, 1));
+      printf("here2\n");
       while(timesteps_done<num_timesteps){ // while more timesteps to do
         for(int i = 0; i<num_SP; i++){ // signal sent to subprocess 
           if(timesteps_done%2==0){
@@ -57,10 +62,15 @@ int main() {
             kill(subprocessPIDs[i], BCALCA);
           }
         }
-        while(semVal!=num_SP);
+        while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
         timesteps_done++;
         write_data("out.csv", DIMENSIONS.size, timesteps_done%2);
       }
+      printf("here3\n");
+      for(int i = 0; i<num_SP; i++){ // exit all  
+          kill(subprocessPIDs[i], QUIT);
+        }
+      exit(0);
     }
     // sleep(1);
     // printf("myPID: %d\n", getpid());
