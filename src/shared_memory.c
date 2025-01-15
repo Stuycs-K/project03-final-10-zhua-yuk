@@ -5,6 +5,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
+#include <math.h>
 
 #include "config.h"
 #include "types.h"
@@ -182,7 +183,7 @@ int write_data(char* path, vec3i size, int mode) {
 
 int semaphore_setup(int num_subprocesses) {
 	union semun semDATA;
-	semDATA.val = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
+	semDATA.val = num_subprocesses;
 	int semDes = (semget(SEMKEY, num_subprocesses, IPC_CREAT | IPC_EXCL | 0644) != -1);
 	semctl(semDes, 0, SETVAL, semDATA);
 	return semDes;
