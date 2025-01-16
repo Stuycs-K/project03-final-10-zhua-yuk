@@ -186,10 +186,11 @@ int semaphore_setup(int num_subprocesses) {
 	union semun semDATA;
 	semDATA.val = num_subprocesses;
 	printf("NUM_SUBPROCESSES PASSED: %d\n", num_subprocesses);
-	int semDes = (semget(SEMKEY, num_subprocesses, IPC_CREAT | IPC_EXCL | 0644) != -1);
+	int semDes = (semget(SEMKEY, 1, IPC_CREAT | 0644) != -1);
 	printf("%d semdes \n",semDes);
 	int val = semctl(semDes, 0, SETVAL, semDATA);
 	printf("MY DATA NOW: %d\n", val);
+	printf("%s\n", strerror(errno));
 	return semDes;
 }
 
