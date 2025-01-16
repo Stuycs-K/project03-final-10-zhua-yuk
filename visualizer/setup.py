@@ -20,6 +20,7 @@ def parse(path):
             p = d.split(" ")
             match p[0]:
                 case "SIZE":
+                #SIZE x y z (m)
                     if GSIZE[0] == -1 and UNITS != -1:
                         GSIZE = [int(float(p[1])/UNITS), int(float(p[2])/UNITS), int(float(p[3])/UNITS)]
                         DATA = np.zeros((GSIZE[0], GSIZE[1], GSIZE[2]))
@@ -27,20 +28,43 @@ def parse(path):
                     else:
                         exit("Already defined grid, or units not defined!")
                 case "MAT":
+                #MAT name thermal-diff-coeff
                     if p[1] not in MATERIALS:
                         MATERIALS[p[1]] = [float(p[2]), MATCOUNT]
                         MATCOUNT += 1
                     else:
                         exit()
                 case "TI":
+                #TI [s]
                     TI = float(p[1])
                 case "TF":
+                #TF [s]
                     TF = float(p[1])
                 case "DT":
+                #DT [s]
                     DT = float(p[1])
                 case "UNITS":
+                #UNITS [m per cell len]
                     UNITS = float(p[1])
+                case "SETTEMP":
+                #SETTEMP x0 y0 z0 x1 y1 z1 temp
+                    if UNITS != -1 and GSIZE[0] != -1:
+                        x0 = int(float(p[1])/UNITS)
+                        y0 = int(float(p[2])/UNITS)
+                        z0 = int(float(p[3])/UNITS)
+                        x1 = int(float(p[4])/UNITS)
+                        y1 = int(float(p[5])/UNITS)
+                        z1 = int(float(p[6])/UNITS)
+                        temp = float(p[7])
+                        for i in range(x0, x1+1):
+                            for j in range(y0, y1+1):
+                                for k in range(z0, z1+1):
+                                    try:
+                                        DATA[i][j][k] = temp
+                                    except:
+                                        pass
                 case "MESH":
+                #MESH file.stl x-len material init_temp x y z (bottom corner)
                     if UNITS != -1 and GSIZE[0] != -1:
                         #load mesh
                         meshpath = p[1]
@@ -71,21 +95,28 @@ def parse(path):
 
                         print(MATERIALS)
                     else:
-                        exit()
-
-
-                    pass
+                        exit("Units and size not set!")
                 case _:
                     pass
         file.close()
+
     outpath = path.split(".")[0] + ".csv"
     with open(outpath, "w") as file:
-        
+        outdata = f"{SIZE[0]},{SIZE[1]},{SIZE[2]},{TI},{TF},{DT},{UNITS},{len(MATERIALS.keys())}\n"
+        for mat in MATERIALS.keys():
+            outdata += f"{MATERIALS[mat][1]},{MATERIALS[mat][0]},{mat}\n"
+        #print materials
+        for k in range(SIZE[2]):
+            for j in range(SIZE[1]):
+                for i in range(SIZE[0]):
+                    outdata += f"{int(MATDATA[i][j][k])}"
+                    if (i < SIZE[0]-1):
+                        outdata += ","
+                outdata += "\n"
+        file.close()
+            
     
 
-        
-
-
-
+    
 
 parse("./test.sim")
