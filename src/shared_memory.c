@@ -6,6 +6,7 @@
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include <math.h>
+#include <errno.h>
 
 #include "config.h"
 #include "types.h"
@@ -184,8 +185,11 @@ int write_data(char* path, vec3i size, int mode) {
 int semaphore_setup(int num_subprocesses) {
 	union semun semDATA;
 	semDATA.val = num_subprocesses;
+	printf("NUM_SUBPROCESSES PASSED: %d\n", num_subprocesses);
 	int semDes = (semget(SEMKEY, num_subprocesses, IPC_CREAT | IPC_EXCL | 0644) != -1);
-	semctl(semDes, 0, SETVAL, semDATA);
+	printf("%d semdes \n",semDes);
+	int val = semctl(semDes, 0, SETVAL, semDATA);
+	printf("MY DATA NOW: %d\n", val);
 	return semDes;
 }
 

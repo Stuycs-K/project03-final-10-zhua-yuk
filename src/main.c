@@ -19,31 +19,33 @@ int START, NEND, ORDER;
 int main() {
     DIMENSIONS = read_fdata("test.csv", "out.csv");
     union semun semDATA;
-    int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); 
-    int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
-    int * subprocessPIDs = malloc(sizeof(int)*num_SP);
+    int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); // number subprocesses
+    int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt; // number of timesteps
+    int * subprocessPIDs = malloc(sizeof(int)*num_SP); // array holding subprocess pids
     printf("num SP: %d, ts: %d, layers each: %d\n",num_SP, num_timesteps, LAYERS_PER_SP);
     int order = 0;
     int parentPID = getpid();
-    semaphore_setup(num_SP);
-    int semVal = semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA);
+    int x = semaphore_setup(num_SP);
+    // while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
+    printf("%d\n", x);
+    semctl(x, 0, GETVAL, semDATA);
     printf("parentPID: %d\n", parentPID);
-    printf("semaphore value: %d\n", semVal);
+    printf("semaphore value: %d\n", semDATA.val);
     for(int layers_done = 0; layers_done <DIMENSIONS.size.k; layers_done+=LAYERS_PER_SP){ 
       // add subprocesses' PIDs to subprocessPIDs array, spawn processes, run 1 timestep calculation
       int subPID = 0; 
-      if(layers_done+LAYERS_PER_SP>DIMENSIONS.size.k+1){
-        subPID = spawn_subprocess(layers_done,DIMENSIONS.size.k+1,order%2);
+      if(layers_done+LAYERS_PER_SP>DIMENSIONS.size.k){
+        subPID = spawn_subprocess(layers_done,DIMENSIONS.size.k,order%2);
       }
       else{
         subPID = spawn_subprocess(layers_done,layers_done+LAYERS_PER_SP,order%2);
       }
+      printf("mysubPID: %d\n", subPID);
       if(subPID>0){
         subprocessPIDs[order] = subPID;
       }
       order++;
     }
-    printf("here3\n");
     if(getpid()==parentPID){
       printf("kldjlkfaj\n");
       while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
@@ -67,6 +69,8 @@ int main() {
       for(int i = 0; i<num_SP; i++){ // exit all  
           kill(subprocessPIDs[i], QUIT);
         }
+      remove_shared_mem();
+      remove_semaphores();
       exit(0);
     }
     // sleep(1);
