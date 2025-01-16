@@ -185,16 +185,15 @@ int write_data(char* path, vec3i size, int mode) {
 int semaphore_setup(int num_subprocesses) {
 	union semun semDATA;
 	semDATA.val = num_subprocesses;
-	printf("NUM_SUBPROCESSES PASSED: %d\n", num_subprocesses);
-	int semDes = (semget(SEMKEY, 1, IPC_CREAT | 0644) != -1);
-	printf("%d semdes \n",semDes);
-	int val = semctl(semDes, 0, SETVAL, semDATA);
-	printf("MY DATA NOW: %d\n", val);
-	printf("%s\n", strerror(errno));
+
+	int semDes = semget(SEMKEY, 1, IPC_CREAT | 0644);
+	semctl(semDes, 0, SETVAL, semDATA);
 	return semDes;
 }
 
 int shared_mem_setup(vec3i size) {
+	printf("MY DATA NOW: %d\n", val);
+	printf("%s\n", strerror(errno));
 	int tsize = size.i*size.j*size.k;
 	if (shmget(COEFKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
 	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
