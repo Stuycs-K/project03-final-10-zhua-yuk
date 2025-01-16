@@ -102,21 +102,30 @@ def parse(path):
 
     outpath = path.split(".")[0] + ".csv"
     with open(outpath, "w") as file:
-        outdata = f"{SIZE[0]},{SIZE[1]},{SIZE[2]},{TI},{TF},{DT},{UNITS},{len(MATERIALS.keys())}\n"
+        outdata = f"{GSIZE[0]},{GSIZE[1]},{GSIZE[2]},{TI},{TF},{DT},{UNITS},{len(MATERIALS.keys())}\n"
         for mat in MATERIALS.keys():
             outdata += f"{MATERIALS[mat][1]},{MATERIALS[mat][0]},{mat}\n"
         #print materials
-        for k in range(SIZE[2]):
-            for j in range(SIZE[1]):
-                for i in range(SIZE[0]):
+        for k in range(GSIZE[2]):
+            for j in range(GSIZE[1]):
+                for i in range(GSIZE[0]):
                     outdata += f"{int(MATDATA[i][j][k])}"
-                    if (i < SIZE[0]-1):
+                    if (i < GSIZE[0]-1):
                         outdata += ","
                 outdata += "\n"
+        #print initial temps
+        for k in range(GSIZE[2]):
+            for j in range(GSIZE[1]):
+                for i in range(GSIZE[0]):
+                    outdata += f"{float(DATA[i][j][k])}"
+                    if (i < GSIZE[0]-1):
+                        outdata += ","
+                outdata += "\n"
+        file.write(outdata)
         file.close()
             
     
 
     
 
-parse("./test.sim")
+parse("test.sim")

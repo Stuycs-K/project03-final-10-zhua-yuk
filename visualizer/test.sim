@@ -1,4 +1,4 @@
-UNITS 0.01;
+UNITS 0.025;
 SIZE 1 1 1;
 MAT cu 0.000115;
-MESH bunny.stl 0.5 cu 10.0 0 0 0;
+MESH bunny.stl 0.7 cu 10.0 0 0 0;
