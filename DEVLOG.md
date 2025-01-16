@@ -29,10 +29,6 @@ This document must be updated daily by EACH group member.
 ### 2025-01-11
 - Created remove semaphore methods and debugged remove_shared_mem methods (20 mins)
 
-### 2025-01-11
-- Created remove semaphore methods and debugged remove_shared_mem methods (20 mins)
-- 
-
 ### 2024-01-12
 - Researched finite difference method further (30 mins) (r < 1/2)
 - Started planning out child and parent communication protocols (20 mins)
@@ -45,6 +41,12 @@ This document must be updated daily by EACH group member.
 - merged new signal handling together with subprocess (20 mins)
 - set constants to be as global variables (20 mins)
 - started working with python program for rendering (40 mins)
+
+### 2024-01-15
+- Worked on setup and rendering programs(20 mins)
+- figured out how to load meshes to voxel and then to data array(40 mins)
+- Started working on interpreter for custom description language to create simulations (65 mins)
+
 
 ## Ashley Zhu
 
