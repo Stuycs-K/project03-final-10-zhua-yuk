@@ -18,39 +18,38 @@ int START, NEND, ORDER;
 
 int main() {
     DIMENSIONS = read_fdata("test.csv", "out.csv");
-    union semun semDATA;
     int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); // number subprocesses
     int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt; // number of timesteps
     int * subprocessPIDs = malloc(sizeof(int)*num_SP); // array holding subprocess pids
     printf("num SP: %d, ts: %d, layers each: %d\n",num_SP, num_timesteps, LAYERS_PER_SP);
     int order = 0;
     int parentPID = getpid();
-    int x = semaphore_setup(num_SP);
-    // while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
-    printf("%d\n", x);
-    semctl(x, 0, GETVAL, semDATA);
+    semaphore_setup(num_SP);
+    while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
     printf("parentPID: %d\n", parentPID);
-    printf("semaphore value: %d\n", semDATA.val);
+    printf("semaphore value: %d\n",semctl(semget(SEMKEY, 0, 0), 0, GETVAL));
     for(int layers_done = 0; layers_done <DIMENSIONS.size.k; layers_done+=LAYERS_PER_SP){ 
       // add subprocesses' PIDs to subprocessPIDs array, spawn processes, run 1 timestep calculation
-      int subPID = 0; 
+      // int subPID = 0; 
+      int subPID;
       if(layers_done+LAYERS_PER_SP>DIMENSIONS.size.k){
+        // printf("%d to %d, order %d\n", layers_done, DIMENSIONS.size.k, order%2);
         subPID = spawn_subprocess(layers_done,DIMENSIONS.size.k,order%2);
       }
       else{
-        subPID = spawn_subprocess(layers_done,layers_done+LAYERS_PER_SP,order%2);
-      }
-      printf("mysubPID: %d\n", subPID);
-      if(subPID>0){
+        if(getpid()==parentPID){
+        // printf("%d to %d, order %d\n", layers_done, layers_done+LAYERS_PER_SP, order%2);
+        subPID = spawn_subprocess(layers_done,layers_done+LAYERS_PER_SP,order%2);}
         subprocessPIDs[order] = subPID;
       }
       order++;
     }
     if(getpid()==parentPID){
-      printf("kldjlkfaj\n");
-      while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
-      int timesteps_done = 1;
-      printf("%d\n",write_data("out.csv", DIMENSIONS.size, 1));
+      for(int ns = 0; ns <num_SP; ns++){
+        printf("[%d] %d\n", ns, subprocessPIDs[ns]);
+      }
+      while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
+      int timesteps_done = 0;
       printf("here2\n");
       while(timesteps_done<num_timesteps){ // while more timesteps to do
         for(int i = 0; i<num_SP; i++){ // signal sent to subprocess 
@@ -61,7 +60,7 @@ int main() {
             kill(subprocessPIDs[i], BCALCA);
           }
         }
-        while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL, semDATA)!=num_SP);
+        while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
         timesteps_done++;
         write_data("out.csv", DIMENSIONS.size, timesteps_done%2);
       }
