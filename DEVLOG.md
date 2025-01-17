@@ -113,3 +113,5 @@ This document must be updated daily by EACH group member.
 
 ### 2025-01-16 - main debugging
 - Worked on fixing semaphore management and calls to spawn_subprocess in main (30 min)
+
+- Made sure signals and timesteps being sent/done properly (20 min)
