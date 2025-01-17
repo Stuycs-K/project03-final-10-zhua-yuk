@@ -18,6 +18,8 @@ int START, NEND, ORDER;
 
 int main() {
     DIMENSIONS = read_fdata("test.csv", "out.csv");
+    write_data("out.csv", DIMENSIONS.size, 0);
+    /*
     int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); // number subprocesses
     int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt; // number of timesteps
     int * subprocessPIDs = malloc(sizeof(int)*num_SP); // array holding subprocess pids
@@ -52,17 +54,20 @@ int main() {
       int timesteps_done = 0;
       printf("here2\n");
       while(timesteps_done<num_timesteps){ // while more timesteps to do
+      printf("doing a time step! \n");
         for(int i = 0; i<num_SP; i++){ // signal sent to subprocess 
           if(timesteps_done%2==0){
+            printf("sending ACALCB to %d\n",subprocessPIDs[i]);
             kill(subprocessPIDs[i], ACALCB);
           }
           else{
+            printf("sending BCALCA to %d\n",subprocessPIDs[i]);
             kill(subprocessPIDs[i], BCALCA);
           }
         }
         while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
         timesteps_done++;
-        write_data("out.csv", DIMENSIONS.size, timesteps_done%2);
+        write_data("out.csv", DIMENSIONS.size, timesteps_done);
       }
       printf("here3\n");
       for(int i = 0; i<num_SP; i++){ // exit all  
@@ -74,4 +79,5 @@ int main() {
     }
     // sleep(1);
     // printf("myPID: %d\n", getpid());
+    */
 }
