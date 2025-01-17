@@ -2,26 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
-<<<<<<< HEAD
-
-#include "config.h"
-#include "shared_memory.h"
-#include "subprocess.h"
-#include "fdmcalc.h"
-
-=======
-#include <time.h>
-#include <unistd.h>
-#include <math.h>
-#include <signal.h>
-#include <errno.h>
-#include <string.h>
->>>>>>> ashley
 
 grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
@@ -88,7 +74,5 @@ int main() {
       remove_semaphores();
       exit(0);
     }
-    // sleep(1);
-    // printf("myPID: %d\n", getpid());
 
 }
