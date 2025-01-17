@@ -1,6 +1,6 @@
 main
 *.swp
-visualizer/.env/
+visualizer/.env/*
 # Prerequisites
 *.d
 

@@ -6,6 +6,7 @@
 #define OUT_FILE_PATH_SIZE 512
 
 #include "types.h"
+
 /*
 read_fdata
     reads in initial conditions .csv file and allocates shared memory

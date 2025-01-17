@@ -46,10 +46,16 @@ static void sighandler(int signo){
         exit(0);
     }
     else if (signo == ACALCB){
-        calculate_once(0);
+        printf("ACALCB got! \n");
+        for(int i = START; i<NEND; i++){
+            calculate_once(0);
+        }
     }
     else if (signo == BCALCA){
-        calculate_once(1);
+        printf("BCALCA got! \n");
+        for(int i = START; i<NEND; i++){
+            calculate_once(1);
+        }
     }
 }
 
@@ -66,9 +72,14 @@ int spawn_subprocess(int start, int nend, int order) {
     }
      
     else {
+        struct sembuf operation; 
+        operation.sem_op = 1;
+        operation.sem_num = 0; 
+        semop(semget(SEMKEY, 1, 0), &operation, 1); 
         signal(ACALCB, sighandler);
         signal(BCALCA, sighandler);
         signal(QUIT, sighandler);
+        printf("child!\n");
         while (1);
     }
 }
