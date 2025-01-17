@@ -73,5 +73,6 @@ int spawn_subprocess(int start, int nend, int order) {
         signal(ACALCB, sighandler);
         signal(BCALCA, sighandler);
         signal(QUIT, sighandler);
+        while (1);
     }
 }

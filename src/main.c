@@ -17,6 +17,8 @@ grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
 
 int main() {
+    grid_dimen dimensions = read_fdata("test.csv", "out.csv");
+    spawn_subprocess(dimensions, 0, dimensions.size.i, 0, 0);
     DIMENSIONS = read_fdata("test.csv", "out.csv");
     write_data("out.csv", DIMENSIONS.size, 0);
     /*

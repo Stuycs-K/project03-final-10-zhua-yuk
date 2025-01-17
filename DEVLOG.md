@@ -29,10 +29,6 @@ This document must be updated daily by EACH group member.
 ### 2025-01-11
 - Created remove semaphore methods and debugged remove_shared_mem methods (20 mins)
 
-### 2025-01-11
-- Created remove semaphore methods and debugged remove_shared_mem methods (20 mins)
-- 
-
 ### 2024-01-12
 - Researched finite difference method further (30 mins) (r < 1/2)
 - Started planning out child and parent communication protocols (20 mins)
@@ -40,6 +36,17 @@ This document must be updated daily by EACH group member.
 ### 2025-01-13
 - Debugged getindex() method (10 mins)
 - debugged fdmcalc functions, rewrote in a cleaner manner (30 mins)
+
+### 2025-01-14
+- merged new signal handling together with subprocess (20 mins)
+- set constants to be as global variables (20 mins)
+- started working with python program for rendering (40 mins)
+
+### 2024-01-15
+- Worked on setup and rendering programs(20 mins)
+- figured out how to load meshes to voxel and then to data array(40 mins)
+- Started working on interpreter for custom description language to create simulations (65 mins)
+
 
 ## Ashley Zhu
 
@@ -89,3 +96,20 @@ This document must be updated daily by EACH group member.
 
 - Divided spawn_subprocess into spawn_subprocess (for forking and attaching signals) and calculate_once, started sighandler (25 min)
 - Updated subprocess.h for changes (5 min)
+
+### 2025-01-14 - signals in subprocess.c, main method
+- Completed sighandler ACALCB and BCALCA management (5 min)
+- Updated subprocess.h for changes in methods (5 min)
+- Get semaphore value in main (5 min)
+
+- spawned subprocesses in main, divided calculations for one time step (40 min)
+- edited sighandler so computes for multiple rows when signal received (5 min)
+
+### 2025-01-15 - signal sending in main, semaphore setup
+- Fixed semaphore setup value (10 min)
+- Sent signals in main (20 min)
+
+- Worked on debugging main and semaphore setup (40 min)
+
+### 2025-01-16 - main debugging
+- Worked on fixing semaphore management and calls to spawn_subprocess in main (30 min)
