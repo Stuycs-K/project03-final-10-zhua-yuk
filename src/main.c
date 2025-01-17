@@ -12,14 +12,14 @@
 #include <unistd.h>
 #include <math.h>
 #include <signal.h>
+#include <errno.h>
+#include <string.h>
 
 grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
 
 int main() {
     grid_dimen DIMENSIONS = read_fdata("test.csv", "out.csv");
-    // write_data("out.csv", DIMENSIONS.size, 0);
-
     int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); // number subprocesses
     int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt; // number of timesteps
     int * subprocessPIDs = malloc(sizeof(int)*num_SP); // array holding subprocess pids
@@ -27,7 +27,7 @@ int main() {
     int order = 0;
     int parentPID = getpid();
     semaphore_setup(num_SP);
-    while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
+    // while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
     printf("parentPID: %d\n", parentPID);
     printf("semaphore value: %d\n",semctl(semget(SEMKEY, 0, 0), 0, GETVAL));
     for(int layers_done = 0; layers_done <DIMENSIONS.size.k; layers_done+=LAYERS_PER_SP){ 
@@ -58,7 +58,10 @@ int main() {
         for(int i = 0; i<num_SP; i++){ // signal sent to subprocess 
           if(timesteps_done%2==0){
             printf("sending ACALCB to %d\n",subprocessPIDs[i]);
-            kill(subprocessPIDs[i], ACALCB);
+            int ret = kill(subprocessPIDs[i], ACALCB);
+            if(ret ==-1){
+            printf("%s\n",strerror(errno));
+            }
           }
           else{
             printf("sending BCALCA to %d\n",subprocessPIDs[i]);
