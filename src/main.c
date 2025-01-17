@@ -18,8 +18,8 @@ int START, NEND, ORDER;
 
 int main() {
     grid_dimen DIMENSIONS = read_fdata("test.csv", "out.csv");
-    write_data("out.csv", DIMENSIONS.size, 0);
-    /*
+    // write_data("out.csv", DIMENSIONS.size, 0);
+
     int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); // number subprocesses
     int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt; // number of timesteps
     int * subprocessPIDs = malloc(sizeof(int)*num_SP); // array holding subprocess pids
@@ -79,5 +79,5 @@ int main() {
     }
     // sleep(1);
     // printf("myPID: %d\n", getpid());
-    */
+    
 }
