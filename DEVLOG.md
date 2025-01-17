@@ -106,7 +106,10 @@ This document must be updated daily by EACH group member.
 - edited sighandler so computes for multiple rows when signal received (5 min)
 
 ### 2025-01-15 - signal sending in main, semaphore setup
--  Fixed semaphore setup value (10 min)
+- Fixed semaphore setup value (10 min)
 - Sent signals in main (20 min)
 
 - Worked on debugging main and semaphore setup (40 min)
+
+### 2025-01-16 - main debugging
+- Worked on fixing semaphore management and calls to spawn_subprocess in main (30 min)

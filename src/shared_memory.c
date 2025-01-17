@@ -5,6 +5,8 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
+#include <math.h>
+#include <errno.h>
 
 #include "config.h"
 #include "types.h"
@@ -181,10 +183,16 @@ int write_data(char* path, vec3i size, int mode) {
 }
 
 int semaphore_setup(int num_subprocesses) {
-	return (semget(SEMKEY, num_subprocesses, IPC_CREAT | IPC_EXCL | 0644) != -1);
+	union semun semDATA;
+	semDATA.val = num_subprocesses;
+
+	int semDes = semget(SEMKEY, 1, IPC_CREAT | 0644);
+	semctl(semDes, 0, SETVAL, semDATA);
+	return semDes;
 }
 
 int shared_mem_setup(vec3i size) {
+	printf("%s\n", strerror(errno));
 	int tsize = size.i*size.j*size.k;
 	if (shmget(COEFKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
 	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
