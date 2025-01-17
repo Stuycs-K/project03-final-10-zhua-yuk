@@ -115,3 +115,6 @@ This document must be updated daily by EACH group member.
 - Worked on fixing semaphore management and calls to spawn_subprocess in main (30 min)
 
 - Made sure signals and timesteps being sent/done properly (20 min)
+
+### 2025-01-17 - signal debugs in main
+- had subprocesses up semaphore, semaphore setup starts value at 0, debugging signal sending/receiving (30 min)
