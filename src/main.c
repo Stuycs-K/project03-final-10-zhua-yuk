@@ -70,6 +70,7 @@ int main() {
         }
         while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
         timesteps_done++;
+        printf("writing here!\n");
         write_data("out.csv", DIMENSIONS.size, timesteps_done);
       }
       printf("here3\n");
@@ -81,6 +82,5 @@ int main() {
       exit(0);
     }
     // sleep(1);
-    // printf("myPID: %d\n", getpid());
-    
+    // printf("myPID: %d\n", getpid());    
 }
