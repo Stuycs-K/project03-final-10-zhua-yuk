@@ -41,6 +41,7 @@ void calculate_once(int mode) {
         semop(semget(SEMKEY, 1, 0), &operation, 1); // up semaphore
 }
 
+<<<<<<< HEAD
 static void sighandler(int signo){
     if(signo == QUIT){
         exit(0);
@@ -59,7 +60,7 @@ static void sighandler(int signo){
     }
 }
 
-int spawn_subprocess(int start, int nend, int order) { 
+int spawn_subprocess(int start, int nend, int order, int pipe) { 
     //edit static vars
     START = start;
     NEND = nend;
@@ -81,5 +82,40 @@ int spawn_subprocess(int start, int nend, int order) {
         signal(QUIT, sighandler);
         printf("child!\n");
         while (1);
+        //Up the semaphore
+        struct sembuf operation; 
+        int semid = semget(SEMKEY, 0, 0);
+        operation.sem_op = 1;
+        operation.sem_num = 0; 
+        semop(semid, &operation, 1); 
+        
+        int command = 0
+        //infinite loop until killed
+        while (1) {
+            //wait for message
+            if (read(pipe, &command, sizeof(int)) > 0) {
+                //Down semaphore
+                operation.sem_op = -1;
+                operation.sem_num = 0;
+                semop(semid, &operation, 1);
+
+                switch (command) {
+                    case ACALCB:
+                        calculate_once(0);
+                        break;
+                    case BCALCA:
+                        calculate_once(1);
+                        break;
+                    case QUIT:
+                        exit(1);
+                        break;
+                    default: 
+                        break;
+                }
+
+            }
+
+
+        }
     }
 }

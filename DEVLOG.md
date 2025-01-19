@@ -118,3 +118,4 @@ This document must be updated daily by EACH group member.
 
 ### 2025-01-17 - signal debugs in main
 - had subprocesses up semaphore, semaphore setup starts value at 0, debugging signal sending/receiving (30 min)
+

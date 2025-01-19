@@ -1,19 +1,21 @@
-#include "config.h"
-#include "shared_memory.h"
-#include "subprocess.h"
-#include <stdlib.h>
 #include <stdio.h>
-#include "fdmcalc.h"
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
+
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
 #include <signal.h>
 #include <errno.h>
 #include <string.h>
+
 
 grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
@@ -80,7 +82,11 @@ int main() {
       remove_semaphores();
       exit(0);
     }
+<<<<<<< HEAD
     // sleep(1);
     // printf("myPID: %d\n", getpid());
     
+=======
+
+>>>>>>> kellen
 }
