@@ -171,14 +171,11 @@ int write_data(char* path, vec3i size, int mode) {
 
 	for (int i=0; i<size.i*size.j*size.k; i++) {
 		fprintf(out, "%lf", data[i]);
-		printf("%lf", data[i]);
 		if ((i > 0) && ((i-1) % size.j == 0)) {
 			fprintf(out, "\n");
-			printf("\n");
 		}
 		else {
 			fprintf(out, ",");
-			printf(",");
 		}
 	}
 	fclose(out);

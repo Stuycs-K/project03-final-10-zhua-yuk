@@ -58,7 +58,6 @@ int spawn_subprocess(int start, int nend, int order, int pipe) {
         operation.sem_op = 1;
         operation.sem_num = 0; 
         semop(semid, &operation, 1); 
-        printf("subprocess %d spawned\n", getpid());
         
         int command = 0;
         //infinite loop until killed

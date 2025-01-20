@@ -47,6 +47,21 @@ This document must be updated daily by EACH group member.
 - figured out how to load meshes to voxel and then to data array(40 mins)
 - Started working on interpreter for custom description language to create simulations (65 mins)
 
+### 2024-01-16
+- Tried to have meshes create solid voxels rather than hollow ones (30 mins)
+- Worked more on interpreter + testing (30 mins)
+
+### 2024-01-17
+- Found out that signals are not a viable method of communicating to subprocesses (40 mins of coping)
+- Started work on communicating with subprocesses with pipes (30 mins)
+
+### 2024-01-19
+- Debugging semaphore usage (20 mins)
+- Cleaning up code (20 mins)
+- Debugging FDM calculations not writing to shared memory (30 mins)
+- Testing working MVP (20 mins)
+
+### 2024-01-20
 
 ## Ashley Zhu
 
