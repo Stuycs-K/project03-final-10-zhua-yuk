@@ -36,7 +36,7 @@ void calculate_once(int mode) {
         struct sembuf operation; 
         operation.sem_num = 0; 
         operation.sem_op = 1;
-        semop(semget(SEMKEY, 1, 0), &operation, 1); // up semaphore
+        semop(semget(SEMKEY, 1, 0), &operation, 1); 
 }
 
 int spawn_subprocess(int start, int nend, int order, int pipe) { 

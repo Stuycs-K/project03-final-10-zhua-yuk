@@ -5,7 +5,7 @@
 
 /*
 update_cell
-    returns the new value of a cell given its neighbors, coefficients, and grid dimensions
+    calculates new value of a cell given its neighbors, coefficients, and grid dimensions
 
 ARGS
     vec3i coord - vec3i containing i,j,k location for the current cell
@@ -20,7 +20,7 @@ double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i co
 
 /*
 update_layers
-    updates newlayer with the new temperatures for a layer given the temperatures of the layers directly above and below, coefficients, timestep, and units
+    updates layers start (inclusive) to nend (exclusive) with the new temperatures after a timestep 
 
 ARGS
     double * original - array containing temperatures before calculation of each cell in the grid 

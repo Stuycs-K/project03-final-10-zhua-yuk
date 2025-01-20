@@ -10,12 +10,9 @@
 #include <sys/shm.h>
 #include <sys/stat.h>
 
-#include <time.h>
-#include <unistd.h>
 #include <math.h>
 #include <signal.h>
 #include <errno.h>
-#include <string.h>
 #include <fcntl.h>
 
 #include "shared_memory.h"
@@ -42,7 +39,7 @@ int main() {
   }
 
   //Create semaphores
-  int semDes = semaphore_setup(num_SP);
+  int semDes = semaphore_setup();
 
   //Spawn children
   int order = 0;
