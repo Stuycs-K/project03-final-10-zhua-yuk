@@ -163,21 +163,25 @@ int write_data(char* path, vec3i size, int mode) {
 	FILE* out = fopen(path, "a");
 	double* data;
 	if (mode) {
-		data = shmat(shmget(BTEMPKEY, 0, 0), 0, 0);
+		data = shmat(shmget(ATEMPKEY, 0, 0), 0, 0);
 	}
 	else {
-		data = shmat(shmget(ATEMPKEY, 0, 0), 0, 0);
+		data = shmat(shmget(BTEMPKEY, 0, 0), 0, 0);
 	}
 
 	for (int i=0; i<size.i*size.j*size.k; i++) {
 		fprintf(out, "%lf", data[i]);
+		printf("%lf", data[i]);
 		if ((i > 0) && ((i-1) % size.j == 0)) {
 			fprintf(out, "\n");
+			printf("\n");
 		}
 		else {
 			fprintf(out, ",");
+			printf(",");
 		}
 	}
+	fclose(out);
 
 	return 1;
 }
@@ -186,13 +190,12 @@ int semaphore_setup(int num_subprocesses) {
 	union semun semDATA;
 	semDATA.val = 0;
 
-	int semDes = semget(SEMKEY, 1, IPC_CREAT | 0644);
+	int semDes = semget(SEMKEY, 1, IPC_CREAT | 0640);
 	semctl(semDes, 0, SETVAL, semDATA);
 	return semDes;
 }
 
 int shared_mem_setup(vec3i size) {
-	printf("%s\n", strerror(errno));
 	int tsize = size.i*size.j*size.k;
 	if (shmget(COEFKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
 	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;

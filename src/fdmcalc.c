@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "fdmcalc.h"
 #include "types.h"
@@ -19,9 +20,6 @@ double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i co
 
     double cc = original[getindex(coord.i, coord.j, coord.k, dimens.size)];
     double laplacian = ((xr - 2*cc + xl) + (yr - 2*cc + yl) + (zr - 2*cc + zl))/(dimens.units*dimens.units);
-    printf("coef: %lf\n", coeffs[getindex(coord.i, coord.j, coord.k, dimens.size)]);
-    printf("lap: %lf\n", laplacian);
-    printf("units: %lf\n", dimens.units);
     return dimens.dt*coeffs[getindex(coord.i, coord.j, coord.k, dimens.size)]*laplacian + cc;
 }
 
@@ -29,18 +27,18 @@ void update_layers(double* original, double* next, double* coeffs, grid_dimen di
     printf("updating layer!\n");
     vec3i coord;
     if (order) {
-        for (coord.i=start; coord.i<nend; coord.i++) {
+        for (coord.k=start; coord.k<nend; coord.k++) {
             for (coord.j=0; coord.j<dimens.size.j; coord.j++) {
-                for (coord.k=0; coord.k<dimens.size.k; coord.k++) {
+                for (coord.i=0; coord.i<dimens.size.i; coord.i++) {
                     next[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
                 }
             }
         }
     }
     else {
-        for (coord.i=nend-1; coord.i>=0; coord.i--) {
+        for (coord.k=nend-1; coord.k>=start; coord.k--) {
             for (coord.j=dimens.size.j-1; coord.j>=0; coord.j--) {
-                for (coord.k=dimens.size.k-1; coord.k>=0; coord.k--) {
+                for (coord.i=dimens.size.i-1; coord.i>=0; coord.i--) {
                     //printf("C: %lf, (%d, %d, %d)\n", original[getindex(coord.i, coord.j, coord.k, dimens.size)], coord.i, coord.j, coord.k);
                     next[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
                 }
