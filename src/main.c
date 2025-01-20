@@ -29,7 +29,7 @@ int START, NEND, ORDER;
 
 int main() {
   //read in file, calculate grid dimensions, timesteps, and subprocesses needed
-  grid_dimen DIMENSIONS = read_fdata("test.csv", "out.csv");
+  DIMENSIONS = read_fdata("test.csv", "out.csv");
   int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
   int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
 
@@ -56,10 +56,7 @@ int main() {
   }
 
   //Block until children are ready (semaphore value is equal to num_subprocesses)
-  while(semctl(semDes, 0, GETVAL) != num_SP) {
-    printf("waiting, sem_val: %d\n", semctl(semDes, 0, GETVAL));
-  }
-  printf("done waiting, sem_val: %d\n", semctl(semDes, 0, GETVAL));
+  while(semctl(semDes, 0, GETVAL) != num_SP);
 
   //Start iterating timesteps
   for (int i=0; i<num_timesteps; i++) {
@@ -69,6 +66,11 @@ int main() {
     //write command to all pipes
     for (int y=0; y<num_SP; y++) {
       write(pipes[y][1], &command, sizeof(int));
+      //Down semaphore
+      struct sembuf operation; 
+      operation.sem_num = 0; 
+      operation.sem_op = -1;
+      semop(semget(SEMKEY, 1, 0), &operation, 1); 
     }
 
     //Wait until calculations are finished
@@ -82,9 +84,11 @@ int main() {
   for (int i=0; i<num_SP; i++) {
     int command = QUIT;
     write(pipes[i][1], &command, sizeof(int));
+    free(pipes[i]);
   }
   
   remove_semaphores();
   remove_shared_mem();
+  free(pipes);
   return 0;
 }
