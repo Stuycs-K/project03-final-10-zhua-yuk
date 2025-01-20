@@ -7,7 +7,7 @@
 #define MATKEY 929292
 #define SEMKEY 1535
 #define CONSKEY 11825
-#define LAYERS_PER_SP 1
+#define LAYERS_PER_SP 5
 
 #define NUM_PARAMETERS 8
 

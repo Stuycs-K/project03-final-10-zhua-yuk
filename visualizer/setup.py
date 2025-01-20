@@ -47,15 +47,15 @@ def parse(path):
                 #UNITS [m per cell len]
                     UNITS = float(p[1])
                 case "SETTEMP":
-                #SETTEMP x0 y0 z0 x1 y1 z1 temp
+                #SETTEMP temp x0 y0 z0 x1 y1 z1
                     if UNITS != -1 and GSIZE[0] != -1:
-                        x0 = int(float(p[1])/UNITS)
-                        y0 = int(float(p[2])/UNITS)
-                        z0 = int(float(p[3])/UNITS)
-                        x1 = int(float(p[4])/UNITS)
-                        y1 = int(float(p[5])/UNITS)
-                        z1 = int(float(p[6])/UNITS)
-                        temp = float(p[7])
+                        x0 = int(float(p[2])/UNITS)
+                        y0 = int(float(p[3])/UNITS)
+                        z0 = int(float(p[4])/UNITS)
+                        x1 = int(float(p[5])/UNITS)
+                        y1 = int(float(p[6])/UNITS)
+                        z1 = int(float(p[7])/UNITS)
+                        temp = float(p[1])
                         for i in range(x0, x1+1):
                             for j in range(y0, y1+1):
                                 for k in range(z0, z1+1):
@@ -63,6 +63,45 @@ def parse(path):
                                         DATA[i][j][k] = temp
                                     except:
                                         pass
+                case "BOX":
+                #BOX material temp x0 y0 z0 x1 y1 z1 
+                    if UNITS != -1 and GSIZE[0] != -1:
+                        x0 = int(float(p[3])/UNITS)
+                        y0 = int(float(p[4])/UNITS)
+                        z0 = int(float(p[5])/UNITS)
+                        x1 = int(float(p[6])/UNITS)
+                        y1 = int(float(p[7])/UNITS)
+                        z1 = int(float(p[8])/UNITS)
+                        temp = float(p[2])
+                        mat = p[1]
+                        for i in range(x0, x1+1):
+                            for j in range(y0, y1+1):
+                                for k in range(z0, z1+1):
+                                    try:
+                                        DATA[i][j][k] = temp
+                                        MATDATA[i][j][k] = MATERIALS[mat][1]
+                                    except:
+                                        pass
+
+                case "SPHERE":
+                    # SPHERE material temp cx cy cz radius
+                    if UNITS != -1 and GSIZE[0] != -1:
+                        cx = int(float(p[3]) / UNITS) 
+                        cy = int(float(p[4]) / UNITS)
+                        cz = int(float(p[5]) / UNITS)  
+                        radius = int(float(p[6]) / UNITS)
+                        temp = float(p[2])
+                        mat = p[1]
+                        for i in range(cx - radius, cx + radius + 1):
+                            for j in range(cy - radius, cy + radius + 1):
+                                for k in range(cz - radius, cz + radius + 1):
+                                    if (i-cx)**2 + (j-cy)**2 + (k-cz)**2 <= radius**2:
+                                        try:
+                                            DATA[i][j][k] = temp
+                                            MATDATA[i][j][k] = MATERIALS[mat][1]
+                                        except:
+                                            pass
+
                 case "MESH":
                 #MESH file.stl x-len material init_temp x y z (bottom corner)
                     if UNITS != -1 and GSIZE[0] != -1:
@@ -92,8 +131,6 @@ def parse(path):
                                 DATA[ix][iy][iz] = float(p[4])
                             except:
                                 pass
-
-                        print(MATERIALS)
                     else:
                         exit("Units and size not set!")
                 case _:
@@ -101,6 +138,9 @@ def parse(path):
         file.close()
 
     outpath = path.split(".")[0] + ".csv"
+    print(f"R Value: {DT/(UNITS**2)}")
+    print(MATERIALS)
+    
     with open(outpath, "w") as file:
         outdata = f"{GSIZE[0]},{GSIZE[1]},{GSIZE[2]},{TI},{TF},{DT},{UNITS},{len(MATERIALS.keys())}\n"
         for mat in MATERIALS.keys():

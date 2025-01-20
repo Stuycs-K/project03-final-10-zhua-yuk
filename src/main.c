@@ -29,7 +29,7 @@ int START, NEND, ORDER;
 
 int main() {
   //read in file, calculate grid dimensions, timesteps, and subprocesses needed
-  DIMENSIONS = read_fdata("test.csv", "out.csv");
+  DIMENSIONS = read_fdata("box1.csv", "out_box1.csv");
   int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
   int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
 

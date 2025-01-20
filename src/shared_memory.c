@@ -57,6 +57,8 @@ grid_dimen read_fdata(char* path, char* opath) {
 	out.units = atof(constants[6]);
 	out.num_materials = atoi(constants[7]);
 	size = out.size.i*out.size.j*out.size.k;
+	
+	free_doublechar(constants);
 	free(constants);
 
 	//read in materials
@@ -77,6 +79,8 @@ grid_dimen read_fdata(char* path, char* opath) {
 		}
 
 		out.matcoeffs[atoi(constants[0])] = atof(constants[1]);
+
+		free_doublechar(constants);
 		free(constants);
 	}
 
@@ -117,7 +121,8 @@ grid_dimen read_fdata(char* path, char* opath) {
 				fprintf(data_out, ",");
 			}
 		}
-
+		
+		free_doublechar(constants);
 		free(constants);
 	}
 
@@ -144,9 +149,9 @@ grid_dimen read_fdata(char* path, char* opath) {
 				fprintf(data_out, ",");
 			}
 		}
-
+		free_doublechar(constants);
 		free(constants);
-	}
+	}	
 
 	//close shared memory and files
 	shmdt(atemp);
@@ -155,7 +160,7 @@ grid_dimen read_fdata(char* path, char* opath) {
 
 	fclose(data);
 	fclose(data_out);
-
+	free(buff);
 	return out;
 }
 

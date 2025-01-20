@@ -6,4 +6,6 @@ int getindex(int i, int j, int k, vec3i dimens);
 
 char** split(char* s, char* delim);
 
+void free_doublechar(char** s);
+
 #endif
