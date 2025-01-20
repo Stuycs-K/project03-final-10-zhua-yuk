@@ -2,8 +2,8 @@
 #define SUBPROCESS_H
 #include "types.h"
 
-extern grid_dimen DIMENSIONS;
-extern int START, NEND, ORDER;
+extern grid_dimen DIMENSIONS;   // dimensions for grid
+extern int START, NEND, ORDER;  // starting layer (inclusive), ending layer (exclusive), order for calculation
 
 /*
 calculate_once

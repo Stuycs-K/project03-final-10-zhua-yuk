@@ -8,7 +8,7 @@
 #define SEMKEY 1535         // semaphore key
 #define LAYERS_PER_SP 1     // max number of layers each subprocess should do calculations for
 
-#define NUM_PARAMETERS 8
+#define NUM_PARAMETERS 8    // number of parameters that should be in the first row of input .csv file
 
 #define ACALCB 1311232      // command number to use A to calculate and write to B
 #define BCALCA 2311231      // command number to use B to calculate and write to A

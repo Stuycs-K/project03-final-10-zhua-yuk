@@ -2,8 +2,8 @@
 #define MEMORY_H
 
 
-#define FILE_BUFF_SIZE 256
-#define OUT_FILE_PATH_SIZE 512
+#define FILE_BUFF_SIZE 256      // maximum file input name size
+#define OUT_FILE_PATH_SIZE 512  // maximum file output name size
 
 #include "types.h"
 
