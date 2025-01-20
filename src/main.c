@@ -1,28 +1,40 @@
-#include "config.h"
-#include "shared_memory.h"
-#include "subprocess.h"
-#include <stdlib.h>
 #include <stdio.h>
-#include "fdmcalc.h"
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
+#include <sys/stat.h>
+
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
 #include <signal.h>
 #include <errno.h>
 #include <string.h>
+#include <fcntl.h>
+
+#include "shared_memory.h"
+#include "config.h"
+#include "subprocess.h"
+#include "types.h"
+#include "utils.h"
 
 grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
 
 int main() {
+  int r_file = open("/dev/random", O_RDONLY, 0);
     grid_dimen DIMENSIONS = read_fdata("test.csv", "out.csv");
     int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); // number subprocesses
     int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt; // number of timesteps
-    int * subprocessPIDs = malloc(sizeof(int)*num_SP); // array holding subprocess pids
+    int * PipeNames = malloc(sizeof(int)*num_SP); // array holding pipe names
+    int * writePipes = malloc(sizeof(int)*num_SP);
+    int * readPipes = malloc(sizeof(int)*num_SP);
     printf("num SP: %d, ts: %d, layers each: %d\n",num_SP, num_timesteps, LAYERS_PER_SP);
     int order = 0;
     int parentPID = getpid();
@@ -31,43 +43,46 @@ int main() {
     printf("parentPID: %d\n", parentPID);
     printf("semaphore value: %d\n",semctl(semget(SEMKEY, 0, 0), 0, GETVAL));
     for(int layers_done = 0; layers_done <DIMENSIONS.size.k; layers_done+=LAYERS_PER_SP){ 
-      // add subprocesses' PIDs to subprocessPIDs array, spawn processes, run 1 timestep calculation
-      // int subPID = 0; 
-      int subPID;
+      // create subprocess pipes with random int names and add to arrays with names/fds
+      read(r_file, PipeNames+order, sizeof(int));
+      char * subPIPE = malloc(sizeof(char)*256);
+      sprintf(subPIPE, "%d", PipeNames[order]); 
+      mkfifo(subPIPE, 0640); 
+      writePipes[order]=open(subPIPE, O_WRONLY, 0);
+      readPipes[order]=open(subPIPE, O_RDONLY, 0);
+
+      // spawn subprocesses and give pipe file descriptors
       if(layers_done+LAYERS_PER_SP>DIMENSIONS.size.k){
         // printf("%d to %d, order %d\n", layers_done, DIMENSIONS.size.k, order%2);
-        subPID = spawn_subprocess(layers_done,DIMENSIONS.size.k,order%2);
+        spawn_subprocess(layers_done,DIMENSIONS.size.k,order%2, readPipes[order]);
       }
       else{
         if(getpid()==parentPID){
         // printf("%d to %d, order %d\n", layers_done, layers_done+LAYERS_PER_SP, order%2);
-        subPID = spawn_subprocess(layers_done,layers_done+LAYERS_PER_SP,order%2);}
-        subprocessPIDs[order] = subPID;
+        spawn_subprocess(layers_done,layers_done+LAYERS_PER_SP,order%2,readPipes[order]);
+        }
       }
       order++;
     }
     if(getpid()==parentPID){
-      for(int ns = 0; ns <num_SP; ns++){
-        printf("[%d] %d\n", ns, subprocessPIDs[ns]);
-      }
       while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
       int timesteps_done = 0;
       printf("here2\n");
-      while(timesteps_done<num_timesteps){ // while more timesteps to do
-      printf("doing a time step! \n");
-        for(int i = 0; i<num_SP; i++){ // signal sent to subprocess 
-          if(timesteps_done%2==0){
-            printf("sending ACALCB to %d\n",subprocessPIDs[i]);
-            int ret = kill(subprocessPIDs[i], ACALCB);
-            if(ret ==-1){
-            printf("%s\n",strerror(errno));
-            }
-          }
-          else{
-            printf("sending BCALCA to %d\n",subprocessPIDs[i]);
-            kill(subprocessPIDs[i], BCALCA);
-          }
+      while(timesteps_done<num_timesteps){ // while more timesteps to do, send messages to subprocess pipes
+        int * message = malloc(sizeof(int)); 
+        if(timesteps_done%2==0){
+          printf("sending ACALCB\n");
+          *message = ACALCB;
         }
+        else{
+          printf("sending BCALCA\n");
+          *message = BCALCA;
+        }
+        printf("doing a time step! \n");
+        for(int i = 0; i<num_SP; i++){ 
+          write(writePipes[i],message, sizeof(int));
+        }
+        // wait until calculation complete, then write
         while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
         timesteps_done++;
         printf("writing here!\n");
@@ -75,12 +90,13 @@ int main() {
       }
       printf("here3\n");
       for(int i = 0; i<num_SP; i++){ // exit all  
-          kill(subprocessPIDs[i], QUIT);
-        }
+        int * message;
+        * message = QUIT;
+        write(writePipes[i],message, sizeof(int));
+      }
       remove_shared_mem();
       remove_semaphores();
       exit(0);
     }
-    // sleep(1);
-    // printf("myPID: %d\n", getpid());    
+
 }

@@ -22,19 +22,6 @@ RETURN VALUE
 void calculate_once(int mode);
 
 /*
-sighandler
-    handles signals subprocesses will receive
-ARGS
-    int signo - signal number
-        QUIT -> exit
-        ACALCB -> calculate, reading from ATEMP and editing BTEMP
-        BCALCA -> calculate, reading from BTEMP and editing ATEMP
-RETURN VALUE
-    void
-*/
-static void sighandler(int signo);
-
-/*
 spawn_subprocess
     forks and attaches signals to child subprocess
 ARGS
@@ -47,6 +34,7 @@ RETURN VALUE
     -1 (fail) something went wrong
     PID of subprocess
 */
-int spawn_subprocess(int start, int nend, int order);
+
+int spawn_subprocess(int start, int nend, int order, int pipe);
 
 #endif
