@@ -50,9 +50,6 @@ int spawn_subprocess(int start, int nend, int order, int pipe) {
     int f = fork();
 
     if (f) {// return pid if parent
-    // signal(ACALCB, sighandler);
-    // signal(BCALCA, sighandler);
-    // signal(QUIT, sighandler);
         return f;
     }
      

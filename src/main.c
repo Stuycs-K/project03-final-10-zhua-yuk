@@ -20,6 +20,7 @@
 
 #include "shared_memory.h"
 #include "config.h"
+#include "fdmcalc.h"
 #include "subprocess.h"
 #include "types.h"
 #include "utils.h"
@@ -43,7 +44,7 @@ int main() {
     // while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
     printf("parentPID: %d\n", parentPID);
     printf("semaphore value: %d\n",semctl(semget(SEMKEY, 0, 0), 0, GETVAL));
-    /*
+    
     for(int layers_done = 0; layers_done <DIMENSIONS.size.k; layers_done+=LAYERS_PER_SP){ 
       printf("a subprocess in the making! \n");
       // create subprocess pipes with random int names and add to arrays with names/fds
@@ -55,7 +56,7 @@ int main() {
       printf("adding to write and read fd arrays!\n");
       writePipes[order]=open(subPIPE, O_RDWR, 0);
       readPipes[order]=open(subPIPE, O_RDONLY, 0);
-
+printf("semaphore value: %d\n",semctl(semget(SEMKEY, 0, 0), 0, GETVAL));
       // spawn subprocesses and give pipe file descriptors
       if(layers_done+LAYERS_PER_SP>DIMENSIONS.size.k){
         printf("%d to %d, order %d\n", layers_done, DIMENSIONS.size.k, order%2);
@@ -69,6 +70,7 @@ int main() {
       }
       order++;
     }
+    printf("semaphore value: %d\n",semctl(semget(SEMKEY, 0, 0), 0, GETVAL));
     if(getpid()==parentPID){
       while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
       int timesteps_done = 0;
@@ -89,7 +91,7 @@ int main() {
           write(writePipes[i],message, sizeof(int));
         }
         // wait until calculation complete, then write
-        while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=num_SP);
+        while(semctl(semget(SEMKEY, 0, 0), 0, GETVAL)!=0);
         timesteps_done++;
         printf("writing here!\n");
         write_data("out.csv", DIMENSIONS.size, timesteps_done%2+1);
@@ -107,5 +109,5 @@ int main() {
       remove_semaphores();
       exit(0);
     }
-    */
+    
 }
