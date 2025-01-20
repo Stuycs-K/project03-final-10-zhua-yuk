@@ -28,14 +28,21 @@ grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
 
 int main() {
-  int r_file = open("/dev/random", O_RDONLY, 0);
-    grid_dimen DIMENSIONS = read_fdata("test.csv", "out.csv");
-    int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP); // number subprocesses
-    int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt; // number of timesteps
-    int * PipeNames = malloc(sizeof(int)*num_SP); // array holding pipe names
-    int * writePipes = malloc(sizeof(int)*num_SP);
-    int * readPipes = malloc(sizeof(int)*num_SP);
-    printf("num SP: %d, ts: %d, layers each: %d\n",num_SP, num_timesteps, LAYERS_PER_SP);
+  //read in file, calculate grid dimensions, timesteps, and subprocesses needed
+  grid_dimen DIMENSIONS = read_fdata("test.csv", "out.csv");
+  int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
+  int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
+
+  //Allocate pipe fd array, and create pipes
+  int** pipes = (int**)malloc(sizeof(int*)*num_SP);
+  for (int i=0; i<num_SP; i++) {
+    pipes[i] = (int*)malloc(sizeof(int)*2);
+    pipe(pipes[i]);
+  }
+
+  
+
+  
     int order = 0;
     int parentPID = getpid();
     semaphore_setup(num_SP);
