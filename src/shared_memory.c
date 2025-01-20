@@ -192,7 +192,6 @@ int semaphore_setup(int num_subprocesses) {
 }
 
 int shared_mem_setup(vec3i size) {
-	printf("%s\n", strerror(errno));
 	int tsize = size.i*size.j*size.k;
 	if (shmget(COEFKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
 	if (shmget(ATEMPKEY, tsize*sizeof(double), IPC_CREAT | 0640) == -1) return 0;
