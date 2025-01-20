@@ -50,9 +50,9 @@ int spawn_subprocess(int start, int nend, int order, int pipe) {
     int f = fork();
 
     if (f) {// return pid if parent
-    signal(ACALCB, sighandler);
-    signal(BCALCA, sighandler);
-    signal(QUIT, sighandler);
+    // signal(ACALCB, sighandler);
+    // signal(BCALCA, sighandler);
+    // signal(QUIT, sighandler);
         return f;
     }
      
@@ -82,9 +82,11 @@ int spawn_subprocess(int start, int nend, int order, int pipe) {
 
                 switch (command) {
                     case ACALCB:
+                        printf("acalcb\n");
                         calculate_once(0);
                         break;
                     case BCALCA:
+                        printf("bcalca\n");
                         calculate_once(1);
                         break;
                     case QUIT:
