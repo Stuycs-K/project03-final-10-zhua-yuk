@@ -45,7 +45,7 @@ def parse(path, outpath):
     UNITS = -1
     MATCOUNT = 1
     MATERIALS = {
-        "air" : [1.9e-5, 0]
+        "vac" : [0.0, 0]
         }
     with open(path, "r") as file:
         data = file.read().replace("\n", "").split(";")
