@@ -18,9 +18,13 @@ A parallelized numerical solver for the heat equation. Space and time are discre
 ```$ ./solver input.csv output.csv```
 
 ## Using the description language:
-### python venv
+### python venv (python3 3.10 used)
 First set up the virtual environment
+```$ python3 -m venv .env```
+Install dependencies:
 ```$ pip3 install -r visualizer/requirements.txt```
+Then activate the environment
+```$ source .env/bin/activate```
 
 ### Syntax
 Statements are seperated by semicolons
