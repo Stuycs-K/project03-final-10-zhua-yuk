@@ -8,8 +8,9 @@ Ashley Zhu and Kellen Yu
 ### Project Description:
 
 A parallelized numerical solver for the heat equation. 
-### Video:
 
+### Video:
+[video](https://drive.google.com/file/d/1ZxU0X1dKx90iceQIdppKsIjghlIx8yXa/view?usp=sharing)
 ### Instructions:
 
 #### To compile:
