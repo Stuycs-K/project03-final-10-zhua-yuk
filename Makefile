@@ -24,5 +24,6 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCDIR)/*.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJDIR) $(TARGET)
+	@rm -rf $(OBJDIR) 
+	@rm -rf $(TARGET)
 

@@ -6,7 +6,7 @@
 #define BTEMPKEY 4807       // shared memory key for B temperature array
 #define MATKEY 929292       // shared memory key for materials array
 #define SEMKEY 1535         // semaphore key
-#define LAYERS_PER_SP 1     // max number of layers each subprocess should do calculations for
+#define LAYERS_PER_SP 5     // max number of layers each subprocess should do calculations for
 
 #define NUM_PARAMETERS 8    // number of parameters that should be in the first row of input .csv file
 

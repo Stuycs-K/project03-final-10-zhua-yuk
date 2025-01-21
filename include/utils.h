@@ -31,4 +31,6 @@ RETURN VALUE
 */
 char** split(char* s, char* delim);
 
+void free_doublechar(char** s);
+
 #endif

@@ -1,6 +1,39 @@
-import numpy as np
 import open3d as o3d
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+import sys
 
+def visualize_voxels(data, units, gsize):
+    fig = plt.figure(figsize=(8, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    plt.get_current_fig_manager().canvas.setWindowTitle("preview")
+    
+    active_voxels = np.where(data != 0)
+    temperatures = data[active_voxels]
+    
+    norm = plt.Normalize(vmin=np.min(temperatures), vmax=np.max(temperatures))
+    cmap = cm.coolwarm
+    
+    ax.scatter(active_voxels[0] * units, active_voxels[1] * units, active_voxels[2] * units,
+               c=temperatures, cmap=cmap, marker='s', s=100, vmin=np.min(temperatures), vmax=np.max(temperatures))
+    
+    ax.set_xlabel('X (m)')
+    ax.set_ylabel('Y (m)')
+    ax.set_zlabel('Z (m)')
+    ax.set_title('Preview')
+    
+    ax.set_xlim(0, gsize[0] * units)
+    ax.set_ylim(0, gsize[1] * units)
+    ax.set_zlim(0, gsize[2] * units)
+    
+    cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax)
+    cbar.set_label('Temperature (C)')
+    
+    ax.view_init(elev=30, azim=45)
+    
+    plt.show()
 
 def parse(path):
     GSIZE = [-1, -1, -1]
@@ -47,22 +80,62 @@ def parse(path):
                 #UNITS [m per cell len]
                     UNITS = float(p[1])
                 case "SETTEMP":
-                #SETTEMP x0 y0 z0 x1 y1 z1 temp
+                #SETTEMP temp x0 y0 z0 x1 y1 z1
                     if UNITS != -1 and GSIZE[0] != -1:
-                        x0 = int(float(p[1])/UNITS)
-                        y0 = int(float(p[2])/UNITS)
-                        z0 = int(float(p[3])/UNITS)
-                        x1 = int(float(p[4])/UNITS)
-                        y1 = int(float(p[5])/UNITS)
-                        z1 = int(float(p[6])/UNITS)
-                        temp = float(p[7])
+                        x0 = int(float(p[2])/UNITS)
+                        y0 = int(float(p[3])/UNITS)
+                        z0 = int(float(p[4])/UNITS)
+                        x1 = int(float(p[5])/UNITS)
+                        y1 = int(float(p[6])/UNITS)
+                        z1 = int(float(p[7])/UNITS)
+                        temp = float(p[1])
+                        for i in range(x0, x1+1):
+                            for j in range(y0, y1+1):
+                                for k in range(z0, z1+1):
+                                    try:
+                                        if (MATDATA[i][j][k] != 0):
+                                            DATA[i][j][k] = temp
+                                    except:
+                                        pass
+                case "BOX":
+                #BOX material temp x0 y0 z0 x1 y1 z1 
+                    if UNITS != -1 and GSIZE[0] != -1:
+                        x0 = int(float(p[3])/UNITS)
+                        y0 = int(float(p[4])/UNITS)
+                        z0 = int(float(p[5])/UNITS)
+                        x1 = int(float(p[6])/UNITS)
+                        y1 = int(float(p[7])/UNITS)
+                        z1 = int(float(p[8])/UNITS)
+                        temp = float(p[2])
+                        mat = p[1]
                         for i in range(x0, x1+1):
                             for j in range(y0, y1+1):
                                 for k in range(z0, z1+1):
                                     try:
                                         DATA[i][j][k] = temp
+                                        MATDATA[i][j][k] = MATERIALS[mat][1]
                                     except:
                                         pass
+
+                case "SPHERE":
+                    # SPHERE material temp cx cy cz radius
+                    if UNITS != -1 and GSIZE[0] != -1:
+                        cx = int(float(p[3]) / UNITS) 
+                        cy = int(float(p[4]) / UNITS)
+                        cz = int(float(p[5]) / UNITS)  
+                        radius = int(float(p[6]) / UNITS)
+                        temp = float(p[2])
+                        mat = p[1]
+                        for i in range(cx - radius, cx + radius + 1):
+                            for j in range(cy - radius, cy + radius + 1):
+                                for k in range(cz - radius, cz + radius + 1):
+                                    if (i-cx)**2 + (j-cy)**2 + (k-cz)**2 <= radius**2:
+                                        try:
+                                            DATA[i][j][k] = temp
+                                            MATDATA[i][j][k] = MATERIALS[mat][1]
+                                        except:
+                                            pass
+
                 case "MESH":
                 #MESH file.stl x-len material init_temp x y z (bottom corner)
                     if UNITS != -1 and GSIZE[0] != -1:
@@ -92,8 +165,6 @@ def parse(path):
                                 DATA[ix][iy][iz] = float(p[4])
                             except:
                                 pass
-
-                        print(MATERIALS)
                     else:
                         exit("Units and size not set!")
                 case _:
@@ -101,6 +172,9 @@ def parse(path):
         file.close()
 
     outpath = path.split(".")[0] + ".csv"
+    print(f"R Value: {DT/(UNITS**2)}")
+    print(MATERIALS)
+    
     with open(outpath, "w") as file:
         outdata = f"{GSIZE[0]},{GSIZE[1]},{GSIZE[2]},{TI},{TF},{DT},{UNITS},{len(MATERIALS.keys())}\n"
         for mat in MATERIALS.keys():
@@ -123,9 +197,10 @@ def parse(path):
                 outdata += "\n"
         file.write(outdata)
         file.close()
-            
     
+    #preview
+    visualize_voxels(DATA, UNITS, GSIZE)
 
-    
-
-parse("test.sim")
+        
+if __name__ == "__main__":
+    parse(sys.argv[1])

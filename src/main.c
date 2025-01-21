@@ -54,11 +54,13 @@ int main(int argc, char *argv[]) {
   //Spawn children
   int order = 0;
   for(int i=0; i<DIMENSIONS.size.k; i+=LAYERS_PER_SP) {
+    printf("%d, %d, %d\n", order, i, DIMENSIONS.size.k);
     if (i+LAYERS_PER_SP > DIMENSIONS.size.k) {
-      spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[i][0]);
+      spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[order][0]);
+      break;
     }
     else {
-      spawn_subprocess(i, i+LAYERS_PER_SP, order % 2, pipes[i][0]);
+      spawn_subprocess(i, i+LAYERS_PER_SP, order % 2, pipes[order][0]);
     }
     order++;
   }
@@ -68,6 +70,7 @@ int main(int argc, char *argv[]) {
 
   //Start iterating timesteps
   for (int i=0; i<num_timesteps; i++) {
+    printf("Running timestep %d of %d\n", i+1, num_timesteps);
     //Pick which command to send
     int command = (i % 2 == 0) ? ACALCB : BCALCA;
 
@@ -97,6 +100,8 @@ int main(int argc, char *argv[]) {
   
   remove_semaphores();
   remove_shared_mem();
+  free(input);
+  free(output);
   free(pipes);
   return 0;
 }

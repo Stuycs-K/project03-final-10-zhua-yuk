@@ -1,0 +1,8 @@
+UNITS 0.1;
+TI 0.0;
+TF 1;
+DT 0.001;
+SIZE 1 1 1;
+MAT cu 0.1;
+BOX cu 20 0 0 0 1 1 1;
+SETTEMP 300 0 0 0 1 1 0.05;
