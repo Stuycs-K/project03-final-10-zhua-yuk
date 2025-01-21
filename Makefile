@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -I./include 
+CFLAGS := -I./include -o3
 
 OBJDIR := build
 INCDIR := include
@@ -12,7 +12,7 @@ SRCS := $(wildcard $(SRCDIR)/*.c)
 SRCS := $(filter-out $(IGNR), $(SRCS))
 OBJS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 
-TARGET = main
+TARGET = solver
 
 all: $(TARGET)
 

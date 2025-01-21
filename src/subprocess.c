@@ -79,5 +79,6 @@ int spawn_subprocess(int start, int nend, int order, int pipe) {
                 }
             }
         }
+        exit(0);
     }
 }

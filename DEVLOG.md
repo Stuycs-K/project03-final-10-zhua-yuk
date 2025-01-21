@@ -62,6 +62,8 @@ This document must be updated daily by EACH group member.
 - Testing working MVP (20 mins)
 
 ### 2024-01-20
+- Filmed video (40 mins)
+- Tested simulations (60 mins)
 
 ## Ashley Zhu
 

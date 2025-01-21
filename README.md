@@ -7,8 +7,68 @@ Ashley Zhu and Kellen Yu
        
 ### Project Description:
 
-A multithreaded iterative FDM solver for the heat equation. 
+A parallelized numerical solver for the heat equation. 
   
 ### Instructions:
 
-The user will create a csv file that contains the dimensions of the grid and thermal coefficients and initial states of each cell. They will then run the program, supplying their csv file and an optional path to an output file (if not supplied it will be created). After the program runs, the user can analyze the output data.
+#### To compile:
+```$ make```
+
+#### To run:
+```$ ./solver input.csv output.csv```
+
+### Using the description language:
+#### python venv
+First set up the virtual environment
+```$ pip3 install -r visualizer/requirements.txt```
+
+#### Syntax
+Statements are seperated by semicolons
+```
+SIZE x y z (m); 
+//define the size of the space (must be first line of program)
+
+MAT name thermal-coeff (m^2/s);
+ //define a material
+
+TI t (s); 
+//define time_initial
+
+TF t (s); 
+//define time_final
+
+DT t (s); 
+//define time step
+
+UNITS t (m); 
+//define meters-per-cell
+
+//The above paramters must be defined before anything else!
+
+SETTEMP temp (C) x0 y0 z0 x1 y1 z1 (m); 
+//sets a box defined by opposing corners (x0, y0, z0) and (x1, y1, z1) to a certain temperature
+
+BOX material temp (C) x0 y0 z0 x1 y1 z1 (m); 
+//creates a box of some material and some initial temperature
+
+SPHERE material temp (C) cx cy cz radius (m); 
+//Creates a sphere of some material and some initial temperature with center (cx, cy, cz) and radius (m)
+
+MESH file.stl x-len material temp (C) x y z (m); 
+//voxelizes a .stl file and places the lower-left-corner of it's bounding box at x y z. The file is the path from the cwd, the x-len is a scaling factor (sets how long the bounding box is along the x-axis).
+
+```
+Note that DT/(UNITS^2) < 0.5 MUST BE TRUE!
+
+#### Example program
+```
+UNITS 0.025;
+TI 0.0;
+TF 0.01;
+DT 0.00001;
+SIZE 1 1 1;
+MAT m1 0.5;
+SETTEMP 32 0 0 0 1 1 1;
+BOX m1 32 0 0 0 1 1 0.1;
+SETTEMP 1000 0.2 0.2 0 0.8 0.8 0.1;
+```
