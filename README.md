@@ -11,6 +11,9 @@ A parallelized numerical solver for the heat equation. Space and time are discre
 ``` can be found in ```src/``` and the header files ```.h``` can be found in ```include/```.
 ###[Demo Video](https://drive.google.com/file/d/1ZxU0X1dKx90iceQIdppKsIjghlIx8yXa/view?usp=sharing)
 ## Instructions:
+### Clone this repo
+```$ git clone https://github.com/Stuycs-K/project03-final-10-zhua-yuk```
+
 ### To compile:
 ```$ make```
 
