@@ -1,13 +1,13 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Vh67aNdh)
 # Heat Equation Solver
 
-### Zhu Cool For Yu [41]
+## Zhu Cool For Yu [41]
 
 Ashley Zhu and Kellen Yu
        
-### Project Description:
+## Project Description:
 
-A parallelized numerical solver for the heat equation. 
+A parallelized numerical solver for the heat equation. Space and time are discretized using the finite difference method (FDM), allowing us to solve the heat equation iteratively. Updating every cell in a 3D space can get quite expensive (computationally), so to expedite this we have opted into parallelizing the calculations needed. Different portions of the space are split among many processes, which all perform the necessary calculations. 
 
 ### Video:
 [video](https://drive.google.com/file/d/1ZxU0X1dKx90iceQIdppKsIjghlIx8yXa/view?usp=sharing)
