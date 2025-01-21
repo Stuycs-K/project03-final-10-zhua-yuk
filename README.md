@@ -9,7 +9,7 @@ Ashley Zhu and Kellen Yu
 
 A parallelized numerical solver for the heat equation. Space and time are discretized using the finite difference method (FDM), allowing us to solve the heat equation iteratively. Updating every cell in a 3D space can get quite expensive (computationally), so to expedite this we have opted into parallelizing the calculations needed. Different portions of the space are split among many processes, which all perform the necessary calculations. All of the source files ```.c
 ``` can be found in ```src/``` and the header files ```.h``` can be found in ```include/```.
-### [Demo Video](https://drive.google.com/file/d/1ZxU0X1dKx90iceQIdppKsIjghlIx8yXa/view?usp=sharing)
+## [Demo Video](https://drive.google.com/file/d/1ZxU0X1dKx90iceQIdppKsIjghlIx8yXa/view?usp=sharing)
 ## Instructions:
 ### Clone this repo
 ```$ git clone https://github.com/Stuycs-K/project03-final-10-zhua-yuk```
