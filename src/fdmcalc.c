@@ -8,6 +8,7 @@
 
 
 double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i coord) {
+    double cc = original[getindex(coord.i, coord.j, coord.k, dimens.size)];
     //x
     double xl = (coord.i > 0) ? original[getindex(coord.i-1, coord.j, coord.k, dimens.size)] : 0;
     double xr = (coord.i < dimens.size.i-1) ? original[getindex(coord.i+1, coord.j, coord.k, dimens.size)] : 0;
@@ -18,7 +19,6 @@ double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i co
     double zl = (coord.k > 0) ? original[getindex(coord.i, coord.j, coord.k-1, dimens.size)] : 0;
     double zr = (coord.k < dimens.size.k-1) ? original[getindex(coord.i, coord.j, coord.k+1, dimens.size)] : 0;
 
-    double cc = original[getindex(coord.i, coord.j, coord.k, dimens.size)];
     double laplacian = ((xr - 2*cc + xl) + (yr - 2*cc + yl) + (zr - 2*cc + zl))/(dimens.units*dimens.units);
     return dimens.dt*coeffs[getindex(coord.i, coord.j, coord.k, dimens.size)]*laplacian + cc;
 }

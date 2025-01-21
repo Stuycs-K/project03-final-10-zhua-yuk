@@ -29,8 +29,8 @@ int START, NEND, ORDER;
 
 int main() {
   //read in file, calculate grid dimensions, timesteps, and subprocesses needed
-  DIMENSIONS = read_fdata("box1.csv", "out_box1.csv");
-  int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
+  DIMENSIONS = read_fdata("bunny.csv", "bunny_o.csv");
+  int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP) + 1;
   int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
 
   //Allocate pipe fd array, and create pipes
@@ -46,11 +46,13 @@ int main() {
   //Spawn children
   int order = 0;
   for(int i=0; i<DIMENSIONS.size.k; i+=LAYERS_PER_SP) {
+    printf("%d, %d, %d\n", order, i, DIMENSIONS.size.k);
     if (i+LAYERS_PER_SP > DIMENSIONS.size.k) {
-      spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[i][0]);
+      spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[order][0]);
+      break;
     }
     else {
-      spawn_subprocess(i, i+LAYERS_PER_SP, order % 2, pipes[i][0]);
+      spawn_subprocess(i, i+LAYERS_PER_SP, order % 2, pipes[order][0]);
     }
     order++;
   }
@@ -60,6 +62,7 @@ int main() {
 
   //Start iterating timesteps
   for (int i=0; i<num_timesteps; i++) {
+    printf("Running timestep %d of %d\n", i+1, num_timesteps);
     //Pick which command to send
     int command = (i % 2 == 0) ? ACALCB : BCALCA;
 
@@ -77,7 +80,7 @@ int main() {
     while(semctl(semDes, 0, GETVAL) != num_SP);
 
     //write data to file
-    write_data("out.csv", DIMENSIONS.size, i%2);
+    write_data("bunny_o.csv", DIMENSIONS.size, i%2);
   }
 
   //Kill all subprocesses

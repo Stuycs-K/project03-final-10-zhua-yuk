@@ -1,6 +1,39 @@
-import numpy as np
 import open3d as o3d
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+import sys
 
+def visualize_voxels(data, units, gsize):
+    fig = plt.figure(figsize=(8, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    plt.get_current_fig_manager().canvas.setWindowTitle("preview")
+    
+    active_voxels = np.where(data != 0)
+    temperatures = data[active_voxels]
+    
+    norm = plt.Normalize(vmin=np.min(temperatures), vmax=np.max(temperatures))
+    cmap = cm.coolwarm
+    
+    ax.scatter(active_voxels[0] * units, active_voxels[1] * units, active_voxels[2] * units,
+               c=temperatures, cmap=cmap, marker='s', s=100, vmin=np.min(temperatures), vmax=np.max(temperatures))
+    
+    ax.set_xlabel('X (m)')
+    ax.set_ylabel('Y (m)')
+    ax.set_zlabel('Z (m)')
+    ax.set_title('Preview')
+    
+    ax.set_xlim(0, gsize[0] * units)
+    ax.set_ylim(0, gsize[1] * units)
+    ax.set_zlim(0, gsize[2] * units)
+    
+    cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax)
+    cbar.set_label('Temperature (C)')
+    
+    ax.view_init(elev=30, azim=45)
+    
+    plt.show()
 
 def parse(path):
     GSIZE = [-1, -1, -1]
@@ -60,7 +93,8 @@ def parse(path):
                             for j in range(y0, y1+1):
                                 for k in range(z0, z1+1):
                                     try:
-                                        DATA[i][j][k] = temp
+                                        if (MATDATA[i][j][k] != 0):
+                                            DATA[i][j][k] = temp
                                     except:
                                         pass
                 case "BOX":
@@ -163,9 +197,10 @@ def parse(path):
                 outdata += "\n"
         file.write(outdata)
         file.close()
-            
     
+    #preview
+    visualize_voxels(DATA, UNITS, GSIZE)
 
-    
-
-parse("test.sim")
+        
+if __name__ == "__main__":
+    parse(sys.argv[1])
