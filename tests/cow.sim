@@ -1,0 +1,8 @@
+UNITS 0.025;
+TI 0.0;
+TF 0.01;
+DT 0.00001;
+SIZE 2 2 1.6;
+MAT m1 0.25;
+SETTEMP 32 0 0 0 1 1 1;
+MESH tests/cow.stl 0.5 m1 1000 0.7 0.05 0;

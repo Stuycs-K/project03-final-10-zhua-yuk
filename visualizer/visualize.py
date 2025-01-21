@@ -70,6 +70,7 @@ def read_file(path, outdir):
         print(f"[Time interval]: {TI}s to {TF}s. [DT]: {DT}s")
         # read in units
         UNITS = float(grid_dimens[6])
+
         r = DT/pow(UNITS, 2)
         print(f"[Units per cell]: {UNITS}m^3")
         print(f"[r value]: {r}")
