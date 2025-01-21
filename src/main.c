@@ -39,9 +39,7 @@ int main(int argc, char *argv[]) {
   }
   //read in file, calculate grid dimensions, timesteps, and subprocesses needed
   DIMENSIONS = read_fdata(input,output);
-  printf("%d, %d, %d\n", DIMENSIONS.size.i, DIMENSIONS.size.j, DIMENSIONS.size.k);
   int num_SP = (int)ceil(DIMENSIONS.size.k/(double)LAYERS_PER_SP);
-  printf("NUM SP: %d\n", num_SP);
   int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
 
   //Allocate pipe fd array, and create pipes
@@ -52,7 +50,6 @@ int main(int argc, char *argv[]) {
   }
   //Create semaphores
   int semDes = semaphore_setup();
-  printf("spwaning\n");
   //Spawn children
   int order = 0;
   for(int i=0; i<DIMENSIONS.size.k; i+=LAYERS_PER_SP) {
@@ -65,13 +62,11 @@ int main(int argc, char *argv[]) {
     }
     order++;
   }
-  printf("spawned\n");
   //Block until children are ready (semaphore value is equal to num_subprocesses)
   while(semctl(semDes, 0, GETVAL) != num_SP);
 
   //Start iterating timesteps
   for (int i=0; i<num_timesteps; i++) {
-    printf("Running timestep %d of %d\n", i+1, num_timesteps);
     //Pick which command to send
     int command = (i % 2 == 0) ? ACALCB : BCALCA;
 
@@ -89,7 +84,10 @@ int main(int argc, char *argv[]) {
     while(semctl(semDes, 0, GETVAL) != num_SP);
 
     //write data to file
-    write_data(output, DIMENSIONS.size, i%2);
+    if (i*DIMENSIONS.dt >= DIMENSIONS.ti) {
+      printf("Writing timestep %d of %d\n", i+1, num_timesteps);
+      write_data(output, DIMENSIONS.size, i%2);
+    }
   }
 
   //Kill all subprocesses

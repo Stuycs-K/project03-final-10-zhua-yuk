@@ -141,6 +141,7 @@ grid_dimen read_fdata(char* path, char* opath) {
 			atemp[y + i*out.size.i] = temp;
 			
 			//write to out file
+			/*
 			fprintf(data_out, "%lf", temp);
 			if (constants[y+1] == NULL) {
 				fprintf(data_out, "\n");
@@ -148,6 +149,7 @@ grid_dimen read_fdata(char* path, char* opath) {
 			else {
 				fprintf(data_out, ",");
 			}
+			*/
 		}
 		free_doublechar(constants);
 		free(constants);
