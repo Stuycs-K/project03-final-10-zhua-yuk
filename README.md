@@ -9,22 +9,20 @@ Ashley Zhu and Kellen Yu
 
 A parallelized numerical solver for the heat equation. Space and time are discretized using the finite difference method (FDM), allowing us to solve the heat equation iteratively. Updating every cell in a 3D space can get quite expensive (computationally), so to expedite this we have opted into parallelizing the calculations needed. Different portions of the space are split among many processes, which all perform the necessary calculations. All of the source files ```.c
 ``` can be found in ```src/``` and the header files ```.h``` can be found in ```include/```.
-### Video:
-[video](https://drive.google.com/file/d/1ZxU0X1dKx90iceQIdppKsIjghlIx8yXa/view?usp=sharing)
-### Instructions:
-
-#### To compile:
+###[Demo Video](https://drive.google.com/file/d/1ZxU0X1dKx90iceQIdppKsIjghlIx8yXa/view?usp=sharing)
+## Instructions:
+### To compile:
 ```$ make```
 
-#### To run:
+### To run:
 ```$ ./solver input.csv output.csv```
 
-### Using the description language:
-#### python venv
+## Using the description language:
+### python venv
 First set up the virtual environment
 ```$ pip3 install -r visualizer/requirements.txt```
 
-#### Syntax
+### Syntax
 Statements are seperated by semicolons
 ```
 SIZE x y z (m); 
@@ -62,7 +60,7 @@ MESH file.stl x-len material temp (C) x y z (m);
 ```
 Note that DT/(UNITS^2) < 0.5 MUST BE TRUE! try to minimize this value.
 
-#### Example program
+### Example program
 ```
 UNITS 0.025;
 TI 0.0;
@@ -75,15 +73,15 @@ BOX m1 32 0 0 0 1 1 0.1;
 SETTEMP 1000 0.2 0.2 0 0.8 0.8 0.1;
 ```
 
-#### Converting description language to .csv input file
+### Converting description language to .csv input file
 ```$ ./setup input.sim output.csv```
 This will display a preview of the environment in a numpy window (lets you get the proper elevation and azimuth angles)
 
-#### Visualizing data
+### Visualizing data
 ```$ ./render data.csv dirname```
 Numbered images will be written to the dirname.
 
-### Media
+## Media
 ![1](https://raw.githubusercontent.com/Stuycs-K/project03-final-10-zhua-yuk/refs/heads/main/images/platform.gif)
 ![2](https://raw.githubusercontent.com/Stuycs-K/project03-final-10-zhua-yuk/refs/heads/main/images/rabbit.gif)
 
