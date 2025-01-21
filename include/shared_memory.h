@@ -2,8 +2,8 @@
 #define MEMORY_H
 
 
-#define FILE_BUFF_SIZE 256
-#define OUT_FILE_PATH_SIZE 512
+#define FILE_BUFF_SIZE 256      // maximum file input name size
+#define OUT_FILE_PATH_SIZE 512  // maximum file output name size
 
 #include "types.h"
 
@@ -14,7 +14,7 @@ read_fdata
     Also creates the writing file and writes initial metadata to it.
 
 ARGS
-    char* path - the path to the .csv file
+    char* path - the path to the input .csv file
     char* opath - the path to the output .csv file
 
 RETURN VALUE
@@ -30,7 +30,8 @@ write_data
 
 ARGS
     char* path - the path of the output .csv file
-    int mode - which shared memory array to choose from
+    vec3i size - size of the grid
+    int mode - which shared memory array to choose to write from
         0 -> array A
         1 -> array B
 
@@ -38,21 +39,22 @@ RETURN VALUE
     1 - success
     0 - fail
 */
+
 int write_data(char* path, vec3i size, int mode);
 
 /*
 semaphore_setup
     creates the semaphore that all the subproceeses share.
-    inits the value to the num_subprocesses argument
+    inits the value to 0
 
 ARGS
-    int num_processes - number of subprocesses to create (initial semaphore value)
+    none
 
 RETURN VALUE
-    1 - success
-    0 - fail
+    semaphore descriptor - success
+    -1 - fail
 */
-int semaphore_setup(int num_subprocesses);
+int semaphore_setup();
 
 /*
 shared_mem_setup
@@ -69,10 +71,12 @@ RETURN VALUE
 int shared_mem_setup(vec3i size);
 
 /*
-remove shared_mem
+remove_shared_mem
     deletes all shared memory arrays
+
 ARGS
     none
+
 RETURN VALUE
     1 - success
     0 - fail
@@ -81,10 +85,12 @@ RETURN VALUE
 int remove_shared_mem();
 
 /*
-remove semaphores
+remove_semaphores
     removes semaphores created
+
 ARGS
     none
+
 RETURN VALUE
     1 - success
     0 - fail

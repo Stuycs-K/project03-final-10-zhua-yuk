@@ -183,10 +183,9 @@ int write_data(char* path, vec3i size, int mode) {
 	return 1;
 }
 
-int semaphore_setup(int num_subprocesses) {
+int semaphore_setup() {
 	union semun semDATA;
 	semDATA.val = 0;
-
 	int semDes = semget(SEMKEY, 1, IPC_CREAT | 0640);
 	semctl(semDes, 0, SETVAL, semDATA);
 	return semDes;

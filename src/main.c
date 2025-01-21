@@ -10,16 +10,14 @@
 #include <sys/shm.h>
 #include <sys/stat.h>
 
-#include <time.h>
-#include <unistd.h>
 #include <math.h>
 #include <signal.h>
 #include <errno.h>
-#include <string.h>
 #include <fcntl.h>
 
 #include "shared_memory.h"
 #include "config.h"
+#include "fdmcalc.h"
 #include "subprocess.h"
 #include "types.h"
 #include "utils.h"
@@ -27,9 +25,19 @@
 grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
 
-int main() {
+int main(int argc, char *argv[]) {
+  char * input = malloc(sizeof(int)*FILE_BUFF_SIZE);
+  char * output = malloc(sizeof(int)*512);
+  strcpy(input, "test.csv");
+  strcpy(output,"out.csv");
+  if(argc>1){
+    strcpy(input, argv[1]);
+  }
+  if(argc>2){
+    strcpy(output, argv[2]);
+  }
   //read in file, calculate grid dimensions, timesteps, and subprocesses needed
-  DIMENSIONS = read_fdata("test.csv", "out.csv");
+  DIMENSIONS = read_fdata(input,output);
   int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
   int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
 
@@ -41,7 +49,7 @@ int main() {
   }
 
   //Create semaphores
-  int semDes = semaphore_setup(num_SP);
+  int semDes = semaphore_setup();
 
   //Spawn children
   int order = 0;
@@ -77,7 +85,7 @@ int main() {
     while(semctl(semDes, 0, GETVAL) != num_SP);
 
     //write data to file
-    write_data("out.csv", DIMENSIONS.size, i%2);
+    write_data(output, DIMENSIONS.size, i%2);
   }
 
   //Kill all subprocesses

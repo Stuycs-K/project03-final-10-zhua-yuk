@@ -36,7 +36,7 @@ void calculate_once(int mode) {
         struct sembuf operation; 
         operation.sem_num = 0; 
         operation.sem_op = 1;
-        semop(semget(SEMKEY, 1, 0), &operation, 1); // up semaphore
+        semop(semget(SEMKEY, 1, 0), &operation, 1); 
 }
 
 int spawn_subprocess(int start, int nend, int order, int pipe) { 
@@ -66,9 +66,11 @@ int spawn_subprocess(int start, int nend, int order, int pipe) {
             if (read(pipe, &command, sizeof(int)) > 0) {
                 switch (command) {
                     case ACALCB:
+                        printf("acalcb\n");
                         calculate_once(0);
                         break;
                     case BCALCA:
+                        printf("bcalca\n");
                         calculate_once(1);
                         break;
                     case QUIT:

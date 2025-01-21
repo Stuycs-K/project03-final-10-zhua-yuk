@@ -134,6 +134,10 @@ This document must be updated daily by EACH group member.
 ### 2025-01-17 - signal debugs in main
 - had subprocesses up semaphore, semaphore setup starts value at 0, debugging signal sending/receiving (30 min)
 
-### 2025-01-20 - implementing pipes in main
+### 2025-01-19 - implementing pipes in main
 - edited main to include pipes instead of signals (40 min)
 - debug semaphore and subprocess.c for pipes (20 min)
+
+### 2025-01-20 - header files, user input/output files
+- update header files (30 min)
+- user gives input and output files in main (10 min)

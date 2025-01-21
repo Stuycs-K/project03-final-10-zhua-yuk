@@ -24,6 +24,7 @@ double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i co
 }
 
 void update_layers(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order) {
+    printf("updating layer!\n");
     vec3i coord;
     if (order) {
         for (coord.k=start; coord.k<nend; coord.k++) {
@@ -38,7 +39,6 @@ void update_layers(double* original, double* next, double* coeffs, grid_dimen di
         for (coord.k=nend-1; coord.k>=start; coord.k--) {
             for (coord.j=dimens.size.j-1; coord.j>=0; coord.j--) {
                 for (coord.i=dimens.size.i-1; coord.i>=0; coord.i--) {
-                    //printf("C: %lf, (%d, %d, %d)\n", original[getindex(coord.i, coord.j, coord.k, dimens.size)], coord.i, coord.j, coord.k);
                     next[getindex(coord.i, coord.j, coord.k, dimens.size)] = update_cell(original, coeffs, dimens, coord);
                 }
             }

@@ -5,17 +5,13 @@
 
 /*
 update_cell
-    returns the new value of a cell given it's neighbors and the timestamp
+    calculates new value of a cell given its neighbors, coefficients, and grid dimensions
 
 ARGS
-    double cc - selected cell temperature
-    double* cn - array of cell neighbors
-        it is always a length 6 array.
-        the order is (think about a cube in 3d grid)
-        [-x, x, -y, y, -z, z]
-    double timestep - the timestep
-    double coeff - thermal coeff
-    double units - unit per cell length
+    vec3i coord - vec3i containing i,j,k location for the current cell
+    grid_dimen dimens - grid_dimen containing information for general calculation (dt, start and end times, grid size, units, material coefficients)
+    double * coeffs - array containing thermal diffusivity coefficients for each cell of the grid
+    double * original - array containing temperatures before calculation of each cell in the grid 
 
 RETURN VALUE
     new temperature of selected cell
@@ -23,21 +19,19 @@ RETURN VALUE
 double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i coord);
 
 /*
-update_layer
-    updates newlayer with the new temperatures for a layer given the temperatures of the layers directly above and below, coefficients, timestep, and units
+update_layers
+    updates layers start (inclusive) to nend (exclusive) with the new temperatures after a timestep 
 
 ARGS
-    double * layer - array of layer's temperatures, going from left to right from the top row to the bottom row
-    double * above - array of layer directly above's temperatures, going from left to right from the top row to the bottom row
-    double * below - array of layer directly below's temperatures, going from left to right from the top row to the bottom row
-    int i_max - number of columns in a layer
-    int j_max - number of rows in a layer
-    double timestep - timestep
-    double units - unit per cell length
-    double * coeffs - array of thermal diffusivity coefficients associated with each cell in the layer, going from left to right from the top row to the bottom row
-    double * newlayer - array of layer with updated temperatures, going from left to right from the top row to the bottom row
-    int mode - will edit from row 0 to last row if mode is 0 and will edit in reverse order (from last row to row 0) otherwise
-Note: if there is no layer above/below the given row, double ** above or double ** below are double ** with appropriate dimensions full of 0s
+    double * original - array containing temperatures before calculation of each cell in the grid 
+    double * next - array to edit with updated temperatures after this calculation
+    double * coeffs - array containing thermal diffusivity coefficients for each cell of the grid
+    grid_dimen dimens - grid_dimen containing information for general calculation (dt, start and end times, grid size, units, material coefficients)
+    int start - layer index to start calculating at 
+    int nend - layer index to stop calculating at (don't calculate this layer)
+    int order - order in which to do the calculation
+        1 -> calculate from layer start to layer nend
+        0 -> reverse calculation order so go from layer nend to layer start
 
 RETURN VALUE
     void
