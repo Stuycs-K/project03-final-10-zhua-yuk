@@ -66,11 +66,9 @@ int spawn_subprocess(int start, int nend, int order, int pipe) {
             if (read(pipe, &command, sizeof(int)) > 0) {
                 switch (command) {
                     case ACALCB:
-                        printf("acalcb\n");
                         calculate_once(0);
                         break;
                     case BCALCA:
-                        printf("bcalca\n");
                         calculate_once(1);
                         break;
                     case QUIT:

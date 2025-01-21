@@ -24,7 +24,6 @@ double update_cell(double* original, double* coeffs, grid_dimen dimens, vec3i co
 }
 
 void update_layers(double* original, double* next, double* coeffs, grid_dimen dimens, int start, int nend, int order) {
-    printf("updating layer!\n");
     vec3i coord;
     if (order) {
         for (coord.k=start; coord.k<nend; coord.k++) {

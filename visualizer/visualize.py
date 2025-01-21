@@ -23,7 +23,7 @@ def visualize_voxels(data, matdata, units, gsize, time, elev, azim, output_file,
     ax.set_xlabel('X (m)')
     ax.set_ylabel('Y (m)')
     ax.set_zlabel('Z (m)')
-    ax.set_title(f"T={time}s")
+    ax.set_title(f"T={round(time, 8)}s")
 
     ax.set_xlim(0, gsize[0] * units)
     ax.set_ylim(0, gsize[1] * units)

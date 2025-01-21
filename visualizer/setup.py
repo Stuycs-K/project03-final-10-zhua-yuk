@@ -35,7 +35,7 @@ def visualize_voxels(data, units, gsize):
     
     plt.show()
 
-def parse(path):
+def parse(path, outpath):
     GSIZE = [-1, -1, -1]
     DATA = None
     MATDATA = None
@@ -45,7 +45,7 @@ def parse(path):
     UNITS = -1
     MATCOUNT = 1
     MATERIALS = {
-        "v" : [0.0, 0]
+        "air" : [1.9e-5, 0]
         }
     with open(path, "r") as file:
         data = file.read().replace("\n", "").split(";")
@@ -171,7 +171,6 @@ def parse(path):
                     pass
         file.close()
 
-    outpath = path.split(".")[0] + ".csv"
     print(f"R Value: {DT/(UNITS**2)}")
     print(MATERIALS)
     
@@ -203,4 +202,4 @@ def parse(path):
 
         
 if __name__ == "__main__":
-    parse(sys.argv[1])
+    parse(sys.argv[1], sys.argv[2])

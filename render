@@ -1,0 +1,1 @@
+python3 visualizer/visualize.py $1 $2

@@ -54,7 +54,6 @@ int main(int argc, char *argv[]) {
   //Spawn children
   int order = 0;
   for(int i=0; i<DIMENSIONS.size.k; i+=LAYERS_PER_SP) {
-    printf("%d, %d, %d\n", order, i, DIMENSIONS.size.k);
     if (i+LAYERS_PER_SP > DIMENSIONS.size.k) {
       spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[order][0]);
       break;
