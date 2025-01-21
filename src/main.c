@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -26,8 +27,8 @@ grid_dimen DIMENSIONS;
 int START, NEND, ORDER;
 
 int main(int argc, char *argv[]) {
-  char * input = malloc(sizeof(int)*FILE_BUFF_SIZE);
-  char * output = malloc(sizeof(int)*512);
+  char * input = (char*)malloc(sizeof(char)*FILE_BUFF_SIZE);
+  char * output =(char*)malloc(sizeof(char)*512);
   strcpy(input, "test.csv");
   strcpy(output,"out.csv");
   if(argc>1){
@@ -38,7 +39,9 @@ int main(int argc, char *argv[]) {
   }
   //read in file, calculate grid dimensions, timesteps, and subprocesses needed
   DIMENSIONS = read_fdata(input,output);
-  int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP) + 1;
+  printf("%d, %d, %d\n", DIMENSIONS.size.i, DIMENSIONS.size.j, DIMENSIONS.size.k);
+  int num_SP = (int)ceil(DIMENSIONS.size.k/(double)LAYERS_PER_SP);
+  printf("NUM SP: %d\n", num_SP);
   int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
 
   //Allocate pipe fd array, and create pipes
@@ -47,27 +50,28 @@ int main(int argc, char *argv[]) {
     pipes[i] = (int*)malloc(sizeof(int)*2);
     pipe(pipes[i]);
   }
-
   //Create semaphores
   int semDes = semaphore_setup();
-
+  printf("spwaning\n");
   //Spawn children
   int order = 0;
   for(int i=0; i<DIMENSIONS.size.k; i+=LAYERS_PER_SP) {
     if (i+LAYERS_PER_SP > DIMENSIONS.size.k) {
-      spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[i][0]);
+      spawn_subprocess(order, DIMENSIONS.size.k, order % 2, pipes[order][0]);
+      break;
     }
     else {
-      spawn_subprocess(i, i+LAYERS_PER_SP, order % 2, pipes[i][0]);
+      spawn_subprocess(order, i+LAYERS_PER_SP, order % 2, pipes[order][0]);
     }
     order++;
   }
-
+  printf("spawned\n");
   //Block until children are ready (semaphore value is equal to num_subprocesses)
   while(semctl(semDes, 0, GETVAL) != num_SP);
 
   //Start iterating timesteps
   for (int i=0; i<num_timesteps; i++) {
+    printf("Running timestep %d of %d\n", i+1, num_timesteps);
     //Pick which command to send
     int command = (i % 2 == 0) ? ACALCB : BCALCA;
 

@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -I./include
+CFLAGS := -I./include 
 
 OBJDIR := build
 INCDIR := include
@@ -17,7 +17,7 @@ TARGET = main
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	@$(CC) $(CFLAGS) -o $@ $(OBJS)
+	@$(CC) $(CFLAGS) -o $@ $(OBJS) -lm
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCDIR)/*.h
 	@mkdir -p $(OBJDIR)
