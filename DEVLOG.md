@@ -123,5 +123,6 @@ This document must be updated daily by EACH group member.
 - edited main to include pipes instead of signals (40 min)
 - debug semaphore and subprocess.c for pipes (20 min)
 
-### 2025-01-20 - header files
+### 2025-01-20 - header files, user input/output files
 - update header files (30 min)
+- user gives input and output files in main (10 min)
