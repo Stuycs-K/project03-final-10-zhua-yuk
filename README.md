@@ -8,7 +8,8 @@ Ashley Zhu and Kellen Yu
 ### Project Description:
 
 A parallelized numerical solver for the heat equation. 
-  
+### Video:
+
 ### Instructions:
 
 #### To compile:
@@ -16,6 +17,9 @@ A parallelized numerical solver for the heat equation.
 
 #### To run:
 ```$ ./solver input.csv output.csv```
+
+### Media
+
 
 ### Using the description language:
 #### python venv
@@ -58,7 +62,7 @@ MESH file.stl x-len material temp (C) x y z (m);
 //voxelizes a .stl file and places the lower-left-corner of it's bounding box at x y z. The file is the path from the cwd, the x-len is a scaling factor (sets how long the bounding box is along the x-axis).
 
 ```
-Note that DT/(UNITS^2) < 0.5 MUST BE TRUE!
+Note that DT/(UNITS^2) < 0.5 MUST BE TRUE! try to minimize this value.
 
 #### Example program
 ```
@@ -72,3 +76,11 @@ SETTEMP 32 0 0 0 1 1 1;
 BOX m1 32 0 0 0 1 1 0.1;
 SETTEMP 1000 0.2 0.2 0 0.8 0.8 0.1;
 ```
+
+#### Converting description language to .csv input file
+```$ ./setup input.sim output.csv```
+This will display a preview of the environment in a numpy window (lets you get the proper elevation and azimuth angles)
+
+#### Visualizing data
+```$ ./render data.csv dirname```
+Numberd images will be written to the dirname.

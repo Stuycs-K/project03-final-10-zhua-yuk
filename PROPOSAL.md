@@ -72,10 +72,10 @@ If possible, we plan to create a python visualizer that uses matplotlib or simil
 # Intended pacing:
 - [x] 1/6 : Initial Proposal
 - [x] 1/8: FDM Calculation functions and File I/O functions complete
-- [ ] 1/11: Shared memory management and Sub-process management complete
-- [ ] 1/12: Testing examples completed
-- [ ] 1/13: MVP completed
-- [ ] 1/15: Visualization tool complete and set up tool complete
-- [ ] 1/18: Visualization animation tool. 
-- [ ] 1/20: Video completed 
+- [x] 1/11: Shared memory management and Sub-process management complete
+- [x] 1/12: Testing examples completed
+- [x] 1/13: MVP completed
+- [x] 1/15: Visualization tool complete and set up tool complete
+- [x] 1/18: Visualization animation tool. 
+- [x] 1/20: Video completed 
 
