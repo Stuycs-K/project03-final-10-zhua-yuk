@@ -17,6 +17,9 @@ A parallelized numerical solver for the heat equation. Space and time are discre
 ### To run:
 ```$ ./solver input.csv output.csv```
 
+### Bugs
+This is not really a bug, but make sure that your dt/(units^2) is less than 0.5. If this value is above 0.5, the system will not be numerically stable. [read more about it here](https://en.wikipedia.org/wiki/Finite_difference_method)
+
 ## Using the description language:
 ### python venv (python3 3.10 used)
 #### set up the virtual environment
