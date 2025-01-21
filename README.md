@@ -18,10 +18,6 @@ A parallelized numerical solver for the heat equation.
 #### To run:
 ```$ ./solver input.csv output.csv```
 
-### Media
-![1](https://raw.githubusercontent.com/Stuycs-K/project03-final-10-zhua-yuk/refs/heads/main/images/platform.gif)
-![2](https://raw.githubusercontent.com/Stuycs-K/project03-final-10-zhua-yuk/refs/heads/main/images/rabbit.gif)
-
 ### Using the description language:
 #### python venv
 First set up the virtual environment
@@ -84,4 +80,9 @@ This will display a preview of the environment in a numpy window (lets you get t
 
 #### Visualizing data
 ```$ ./render data.csv dirname```
-Numberd images will be written to the dirname.
+Numbered images will be written to the dirname.
+
+### Media
+![1](https://raw.githubusercontent.com/Stuycs-K/project03-final-10-zhua-yuk/refs/heads/main/images/platform.gif)
+![2](https://raw.githubusercontent.com/Stuycs-K/project03-final-10-zhua-yuk/refs/heads/main/images/rabbit.gif)
+
