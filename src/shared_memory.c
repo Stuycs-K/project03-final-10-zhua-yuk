@@ -32,7 +32,6 @@ grid_dimen read_fdata(char* path, char* opath) {
 	//open files
 	FILE* data = fopen(path, "r");
 	FILE* data_out = fopen(opath, "w");
-	printf("opened\n");
 
 	//read in constants
 	fgets(buff, FILE_BUFF_SIZE, data);

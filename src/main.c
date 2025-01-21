@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   }
   //read in file, calculate grid dimensions, timesteps, and subprocesses needed
   DIMENSIONS = read_fdata(input,output);
-  int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP);
+  int num_SP = ceil(DIMENSIONS.size.k/LAYERS_PER_SP) + 1;
   int num_timesteps = (DIMENSIONS.tf)/DIMENSIONS.dt;
 
   //Allocate pipe fd array, and create pipes
@@ -55,11 +55,10 @@ int main(int argc, char *argv[]) {
   int order = 0;
   for(int i=0; i<DIMENSIONS.size.k; i+=LAYERS_PER_SP) {
     if (i+LAYERS_PER_SP > DIMENSIONS.size.k) {
-      spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[order][0]);
-      break;
+      spawn_subprocess(i, DIMENSIONS.size.k, order % 2, pipes[i][0]);
     }
     else {
-      spawn_subprocess(i, i+LAYERS_PER_SP, order % 2, pipes[order][0]);
+      spawn_subprocess(i, i+LAYERS_PER_SP, order % 2, pipes[i][0]);
     }
     order++;
   }
@@ -69,7 +68,6 @@ int main(int argc, char *argv[]) {
 
   //Start iterating timesteps
   for (int i=0; i<num_timesteps; i++) {
-    printf("Running timestep %d of %d\n", i+1, num_timesteps);
     //Pick which command to send
     int command = (i % 2 == 0) ? ACALCB : BCALCA;
 
@@ -99,8 +97,6 @@ int main(int argc, char *argv[]) {
   
   remove_semaphores();
   remove_shared_mem();
-  free(input);
-  free(output);
   free(pipes);
   return 0;
 }
